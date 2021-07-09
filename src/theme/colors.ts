@@ -8,8 +8,9 @@ export const colors = {
   buttonPrimaryText: '#FFFFFF',
   itemHoverDisabled: 'rgba(49, 47, 55, 0.8)',
   itemHover: 'rgba(73, 70, 83, 0.8)',
-  danger: '#FF9A9A',
-  success: '#7EE45A',
   snakeBody: '#E9E9E9',
   border: '#A3A3A3',
+  danger: '#FF9A9A',
+  success: '#7EE45A',
+  warn: '#FBC02A',
 } as const;
