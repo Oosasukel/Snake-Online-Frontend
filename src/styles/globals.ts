@@ -11,14 +11,14 @@ export const GlobalStyle = createGlobalStyle`
   input,
   button,
   textarea {
-    font: 400 16px 'Lato', sans-serif;
+    font: ${({ theme }) => theme.fontWeights.normal} 16px 'Nunito', sans-serif;
   }
 
   html,
   body,
   body > div:first-child {
     height: 100vh;
-    background: #1c1b20;
+    background: ${({ theme }) => theme.colors.background};
   }
 
   button {
