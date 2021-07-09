@@ -5,7 +5,7 @@ describe('Example tests', () => {
     expect(1 + 2).toBe(3);
   });
 
-  test('Home name should be Home', () => {
-    expect(Home.name).toBe('Home');
+  test('Home name should be HomePage', () => {
+    expect(Home.name).toBe('HomePage');
   });
 });
