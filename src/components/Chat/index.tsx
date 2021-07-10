@@ -83,7 +83,7 @@ const Chat = () => {
       const minutes = currentDate.getMinutes().toString().padStart(2, '0');
 
       addMessage({
-        sender: 'Oosasukel',
+        sender: 'Usuário aleatório',
         time: `${hour}:${minutes}`,
         text:
           'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
