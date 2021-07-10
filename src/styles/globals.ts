@@ -28,5 +28,15 @@ export const GlobalStyle = createGlobalStyle`
   a {
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(1.1)
+    }
+
+    &:active {
+      filter: brightness(1.2)
+    }
   }
 `;
