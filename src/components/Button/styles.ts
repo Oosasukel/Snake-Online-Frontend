@@ -9,6 +9,8 @@ export const CustomButton = styled.button<CustomButtonProps>`
   border: 1px solid transparent;
   border-radius: 0.75rem;
   width: 100%;
+  display: flex;
+  justify-content: center;
 
   ${({ theme, variant }) => {
     if (variant === 'secondary') {
