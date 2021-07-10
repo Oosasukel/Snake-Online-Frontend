@@ -15,7 +15,11 @@ const SignIn = () => {
           placeholder="Email or Nickname"
           style={{ marginBottom: '1rem' }}
         />
-        <Input placeholder="Password" style={{ marginBottom: '0.25rem' }} />
+        <Input
+          type="password"
+          placeholder="Password"
+          style={{ marginBottom: '0.25rem' }}
+        />
         <S.ForgotPasswordText>Forgot password?</S.ForgotPasswordText>
 
         <Button style={{ marginBottom: '2rem' }}>Sign In</Button>
