@@ -1,9 +1,10 @@
+import Chat from 'components/Chat';
 import * as S from './styles';
 
 const Home = () => {
   return (
     <S.Container>
-      <S.Title>Home</S.Title>
+      <Chat />
     </S.Container>
   );
 };

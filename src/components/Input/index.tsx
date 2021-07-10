@@ -1,8 +1,14 @@
-import { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import * as S from './styles';
 
-const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
-  return <S.CustomInput {...props} />;
-};
+// eslint-disable-next-line react/display-name
+const Input = React.forwardRef(
+  (
+    props: InputHTMLAttributes<HTMLInputElement>,
+    ref: React.Ref<HTMLInputElement>
+  ) => {
+    return <S.CustomInput ref={ref} {...props} />;
+  }
+);
 
 export default Input;

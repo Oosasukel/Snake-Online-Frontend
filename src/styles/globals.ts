@@ -39,4 +39,28 @@ export const GlobalStyle = createGlobalStyle`
       filter: brightness(1.2)
     }
   }
+
+  /* scrollbar */
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    /* box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px; */
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.scrollbar}; 
+    border-radius: 1rem;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.scrollbar}; 
+  }
 `;
