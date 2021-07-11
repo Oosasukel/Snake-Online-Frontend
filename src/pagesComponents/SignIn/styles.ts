@@ -42,7 +42,8 @@ export const Form = styled.form`
   width: 17rem;
 `;
 
-export const ForgotPasswordText = styled.a`
+export const ForgotPasswordText = styled.span`
+  cursor: pointer;
   color: ${({ theme }) => theme.colors.textSecondary};
   text-align: right;
   margin-bottom: 1.375rem;

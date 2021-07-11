@@ -77,7 +77,7 @@ const Chat = () => {
   );
 
   useEffect(() => {
-    setInterval(() => {
+    const intervalRef = setInterval(() => {
       const currentDate = new Date();
       const hour = currentDate.getHours().toString().padStart(2, '0');
       const minutes = currentDate.getMinutes().toString().padStart(2, '0');
@@ -89,6 +89,10 @@ const Chat = () => {
           'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       });
     }, 3000);
+
+    return () => {
+      clearInterval(intervalRef);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

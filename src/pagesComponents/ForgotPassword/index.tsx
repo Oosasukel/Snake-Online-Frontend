@@ -37,7 +37,12 @@ const ForgotPassword = () => {
         <Input placeholder="Email" />
 
         <S.ButtonsContainer>
-          <Button disabled={loading} type="button" variant="secondary">
+          <Button
+            onClick={() => router.push('/signin')}
+            disabled={loading}
+            type="button"
+            variant="secondary"
+          >
             Cancel
           </Button>
           <Button disabled={loading} loading={loading}>

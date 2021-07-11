@@ -1,8 +1,12 @@
 import Button from 'components/Button';
 import Input from 'components/Input';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import * as S from './styles';
 
 const SignIn = () => {
+  const router = useRouter();
+
   return (
     <S.Container>
       <S.LogoContainer>
@@ -20,12 +24,19 @@ const SignIn = () => {
           placeholder="Password"
           style={{ marginBottom: '0.25rem' }}
         />
-        <S.ForgotPasswordText>Forgot password?</S.ForgotPasswordText>
+        <Link href="/forgot-password">
+          <S.ForgotPasswordText>Forgot password?</S.ForgotPasswordText>
+        </Link>
 
-        <Button style={{ marginBottom: '2rem' }}>Sign In</Button>
+        <Button
+          onClick={() => router.push('/')}
+          style={{ marginBottom: '2rem' }}
+        >
+          Sign In
+        </Button>
 
         <S.FooterText>
-          Don{"'"}t have an account? <a>Create</a>
+          Don{"'"}t have an account? <Link href="/signup">Create</Link>
         </S.FooterText>
       </S.Form>
     </S.Container>

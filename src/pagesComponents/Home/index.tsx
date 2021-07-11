@@ -1,13 +1,21 @@
+import Background1 from 'components/Background1';
 import Button from 'components/Button';
 import Chat from 'components/Chat';
 import Input from 'components/Input';
 import SnakeAvatar from 'components/SnakeAvatar';
+import { useRouter } from 'next/router';
 import * as S from './styles';
 
 const Home = () => {
+  const router = useRouter();
+
   return (
     <S.Container>
-      <S.ReturnIcon src="/icons/return.svg" />
+      <Background1 />
+      <S.ReturnIcon
+        onClick={() => router.push('/signin')}
+        src="/icons/return.svg"
+      />
 
       <S.SectionPlayer>
         <S.PlayerInfo>
@@ -23,18 +31,38 @@ const Home = () => {
             <span>Players</span>
           </S.RoomsHeader>
           <S.RoomsList>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>
                 Sala do Rodrigo Sala do Rodrigo Sala do Rodrigo Sala do Rodrigo
                 Sala do Rodrigo Sala do Rodrigo
               </span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
+              <span>Sala do Rodrigo</span>
+              <span>6/8</span>
+            </S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
+              <span>Sala do Rodrigo</span>
+              <span>6/8</span>
+            </S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
+              <span>Sala do Rodrigo</span>
+              <span>6/8</span>
+            </S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
+              <span>Sala do Rodrigo</span>
+              <span>6/8</span>
+            </S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
+              <span>Sala do Rodrigo</span>
+              <span>6/8</span>
+            </S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
@@ -50,35 +78,35 @@ const Home = () => {
               <span>Sala do Rodrigo</span>
               <span>8/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>
-            <S.ListItem>
+            <S.ListItem onClick={() => router.push('/room')}>
               <span>Sala do Rodrigo</span>
               <span>6/8</span>
             </S.ListItem>

@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   color: ${({ theme }) => theme.colors.textPrimary};
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   text-align: center;
   margin-bottom: 0.5rem;
 `;

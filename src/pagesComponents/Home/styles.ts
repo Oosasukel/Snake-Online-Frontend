@@ -5,6 +5,8 @@ export const Container = styled.div`
   padding: 4rem;
   height: 100%;
   display: grid;
+  position: relative;
+  overflow: hidden;
   grid-template-columns: 1fr 1.5fr;
   grid-template-rows: minmax(0, 1fr);
   gap: 4rem;
@@ -15,8 +17,9 @@ export const ReturnIcon = styled(SVG)`
   cursor: pointer;
   top: 4rem;
   left: 4rem;
-  min-height: 1.5rem;
-  min-width: 1.5rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  z-index: 2;
 
   path {
     fill: ${({ theme }) => theme.colors.danger};
@@ -40,6 +43,7 @@ export const SectionPlayer = styled.section`
   display: grid;
   grid-template-rows: 1fr minmax(0, 1fr);
   gap: 4rem;
+  z-index: 1;
 `;
 
 export const PlayerInfo = styled.div`
@@ -60,36 +64,7 @@ export const SectionRooms = styled.section`
   display: grid;
   grid-template-rows: minmax(0, 1fr) min-content;
   gap: 0.5rem;
-
-  table {
-    thead {
-      tr {
-      }
-    }
-    tbody {
-      overflow: auto;
-      tr {
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-    tr {
-      th {
-        color: ${({ theme }) => theme.colors.textPrimary};
-        font-weight: ${({ theme }) => theme.fontWeights.bold};
-        font-size: 1.125rem;
-      }
-
-      td {
-        color: ${({ theme }) => theme.colors.textPrimary};
-
-        &:last-child {
-          text-align: right;
-        }
-      }
-    }
-  }
+  z-index: 1;
 `;
 
 export const RoomsContainer = styled.div`
@@ -102,6 +77,7 @@ export const RoomsHeader = styled.div`
   gap: 2rem;
   grid-template-columns: 1fr min-content;
   padding: 0.25rem 0.5rem;
+  margin-bottom: 1rem;
 
   span {
     color: ${({ theme }) => theme.colors.textPrimary};

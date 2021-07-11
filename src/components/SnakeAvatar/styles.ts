@@ -4,25 +4,20 @@ const SnakeMovement = keyframes`
     0% {
         transform: translateX(0);
     }
-    25% {
-        transform: translateX(-12%);
-    }
-    75% {
-        transform: translateX(12%);
-    }
     100% {
-        transform: translateX(0);
+        transform: translateX(1.5%);
     }
 `;
 
 export const Tail = styled.div`
+  box-shadow: ${({ theme }) => theme.boxShadows.snakeBody};
   height: 100%;
   width: min-content;
   display: inline-block;
   background-color: ${({ theme }) => theme.colors.snakeBody};
   border-radius: 17%;
 
-  animation: ${SnakeMovement} 1s linear infinite;
+  animation: ${SnakeMovement} 1.2s cubic-bezier(0.5, -50, 0.5, 50) infinite;
 `;
 
 export const Container = styled.div`
@@ -35,20 +30,21 @@ export const Container = styled.div`
   width: 100%;
 
   ${Tail}:nth-child(1) {
-    animation-delay: 0.4s;
+    animation-delay: 0.2s;
   }
 
   ${Tail}:nth-child(2) {
-    animation-delay: 0.2s;
+    animation-delay: 0.1s;
   }
 `;
 
 export const Head = styled.div`
+  box-shadow: ${({ theme }) => theme.boxShadows.snakeAvatarHead};
   height: 100%;
   width: min-content;
   display: inline-block;
   border-radius: 17%;
   background-color: ${({ theme }) => theme.colors.primary};
 
-  animation: ${SnakeMovement} 1s linear infinite;
+  animation: ${SnakeMovement} 1.2s cubic-bezier(0.5, -50, 0.5, 50) infinite;
 `;
