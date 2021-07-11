@@ -23,7 +23,7 @@ module.exports = {
                 'https://fonts.googleapis.com',
                 'https://fonts.gstatic.com',
               ],
-              imgSrc: ["'self'"],
+              imgSrc: ["'self'", 'data:'],
               baseUri: 'self',
               formAction: 'self',
               frameAncestors: true,

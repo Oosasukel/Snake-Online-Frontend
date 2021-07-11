@@ -11,6 +11,7 @@ export const CustomButton = styled.button<CustomButtonProps>`
   width: 100%;
   display: flex;
   justify-content: center;
+  white-space: nowrap;
 
   ${({ theme, variant }) => {
     if (variant === 'secondary') {

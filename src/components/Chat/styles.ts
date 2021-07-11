@@ -11,7 +11,7 @@ export const Container = styled.div`
 
   display: grid;
   grid-template-rows: 1fr min-content;
-  grid-gap: 0.5rem;
+  gap: 0.5rem;
 `;
 
 export const Message = styled.div``;
@@ -54,7 +54,7 @@ export const SendMessageForm = styled.form`
   display: grid;
   align-items: center;
   grid-template-columns: 1fr min-content;
-  grid-gap: 0.5rem;
+  gap: 0.5rem;
 
   width: 100%;
 
@@ -67,11 +67,7 @@ export const SendMessageForm = styled.form`
   }
 `;
 
-interface SendMessageIconProps {
-  checked?: boolean;
-}
-
-export const SendMessageIcon = styled(SVG)<SendMessageIconProps>`
+export const SendMessageIcon = styled(SVG)`
   min-height: 1.5rem;
   min-width: 1.5rem;
 

@@ -33,5 +33,5 @@ export const ButtonsContainer = styled.div`
   margin-top: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem;
+  gap: 1rem;
 `;
