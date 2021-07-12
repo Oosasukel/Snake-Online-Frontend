@@ -7,9 +7,9 @@ export const Container = styled.div`
   display: grid;
   position: relative;
   overflow: hidden;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1.5fr 4fr;
   grid-template-rows: minmax(0, 1fr);
-  gap: 4rem;
+  gap: 2rem;
 `;
 
 export const SectionChat = styled.section`
@@ -53,7 +53,7 @@ export const ReturnIcon = styled(SVG)`
 export const SectionRoom = styled.section`
   display: grid;
   grid-template-columns: minmax(0, 1fr) min-content;
-  gap: 4rem;
+  gap: 2rem;
   z-index: 1;
 `;
 
