@@ -63,4 +63,28 @@ export const GlobalStyle = createGlobalStyle`
   ::-webkit-scrollbar-thumb:hover {
     background: ${({ theme }) => theme.colors.scrollbar}; 
   }
+
+  html {
+    @media (min-width: 1600px) and (min-height: 900px){
+      font-size: 20px;
+    }
+    @media (min-width: 1920px) and (min-height: 1080px){
+      font-size: 24px;
+    }
+    @media (min-width: 2560px) and (min-height: 1440px){
+      font-size: 26px;
+    }
+    @media (min-width: 3200px) and (min-height: 1800px){
+      font-size: 30px;
+    }
+    @media (min-width: 3840px) and (min-height: 2160px){
+      font-size: 36px;
+    }
+    @media (min-width: 5120px) and (min-height: 2880px){
+      font-size: 54px;
+    }
+    @media (min-width: 7680px) and (min-height: 4320px){
+      font-size: 82px;
+    }
+  }
 `;
