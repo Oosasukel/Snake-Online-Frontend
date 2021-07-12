@@ -10,7 +10,11 @@ interface Message {
   text: string;
 }
 
-const Chat = () => {
+interface ChatProps {
+  onMessage?: (message: Message) => void;
+}
+
+const Chat = ({ onMessage }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesContainerRef = useRef<HTMLDivElement>();
   const inputRef = useRef<HTMLInputElement>();
@@ -47,11 +51,15 @@ const Chat = () => {
         }
       });
 
+      if (onMessage) {
+        onMessage(message);
+      }
+
       if (scrollWasBottom) {
         setTimeout(scrollToBottom, 0);
       }
     },
-    [scrollIsBottom, scrollToBottom]
+    [onMessage, scrollIsBottom, scrollToBottom]
   );
 
   const submitMessage = useCallback(

@@ -16,4 +16,5 @@ export const colors = {
   danger: '#FF9A9A',
   success: '#7EE45A',
   warn: '#FBC02A',
+  balloonBackground: '#fff',
 } as const;

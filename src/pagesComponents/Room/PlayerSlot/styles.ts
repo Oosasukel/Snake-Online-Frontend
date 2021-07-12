@@ -141,3 +141,42 @@ export const SlotClosedIcon = styled(SVG)`
     fill: ${({ theme }) => theme.colors.snakePlaceholder};
   }
 `;
+
+export const MessageBox = styled.div`
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(0.8rem, -3rem);
+  width: 6rem;
+  height: 3.6rem;
+  background-color: ${({ theme }) => theme.colors.balloonBackground};
+  border-radius: 1rem;
+  padding: 0.625rem;
+`;
+
+export const MessageTail = styled(SVG)`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translate(0.4rem, 1.2rem);
+  z-index: 1;
+  min-height: 2rem;
+  min-width: 2rem;
+
+  path {
+    fill: ${({ theme }) => theme.colors.balloonBackground};
+  }
+`;
+
+export const MessageText = styled.p`
+  font-size: 0.625rem;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+`;

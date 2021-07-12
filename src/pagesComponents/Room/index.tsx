@@ -3,13 +3,14 @@ import Button from 'components/Button';
 import Chat from 'components/Chat';
 import Input from 'components/Input';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import PlayerSlot from './PlayerSlot';
+import { useRef, useState } from 'react';
+import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
 const Room = () => {
   const router = useRouter();
   const [ready, setReady] = useState(false);
+  const playerSlotRef = useRef<PlayerSlotRef>();
 
   return (
     <S.Container>
@@ -24,13 +25,24 @@ const Room = () => {
           <h1>Sala do Rodrigo</h1>
         </S.TitleContainer>
 
-        <Chat />
+        <Chat
+          onMessage={(message) => {
+            if (message.sender === 'Oosasukel') {
+              playerSlotRef.current.message(message.text);
+            }
+          }}
+        />
       </S.SectionChat>
 
       <S.SectionRoom>
         <S.PlayersContainer>
           <PlayerSlot empty={false} name="Oosasukel" owner />
-          <PlayerSlot empty={false} name="Oosasukel" canKick />
+          <PlayerSlot
+            ref={playerSlotRef}
+            empty={false}
+            name="Oosasukel"
+            canKick
+          />
           <PlayerSlot empty={false} name="Oosasukel" canKick ready />
           <PlayerSlot empty={false} name="Oosasukel" canKick ready />
           <PlayerSlot empty={false} name="Oosasukel" canKick ready />
