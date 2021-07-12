@@ -20,6 +20,18 @@ export const Tail = styled.div`
   animation: ${SnakeMovement} 1.2s cubic-bezier(0.5, -50, 0.5, 50) infinite;
 `;
 
+export const EmptyBlock = styled.div`
+  opacity: 0.2;
+  box-shadow: ${({ theme }) => theme.boxShadows.snakePlaceholder};
+  height: 100%;
+  width: min-content;
+  display: inline-block;
+  background-color: ${({ theme }) => theme.colors.snakePlaceholder};
+  border-radius: 17%;
+
+  animation: ${SnakeMovement} 1.2s cubic-bezier(0.5, -50, 0.5, 50) infinite;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -34,6 +46,14 @@ export const Container = styled.div`
   }
 
   ${Tail}:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  ${EmptyBlock}:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  ${EmptyBlock}:nth-child(2) {
     animation-delay: 0.1s;
   }
 `;

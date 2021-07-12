@@ -59,8 +59,8 @@ export const SectionRoom = styled.section`
 
 export const PlayersContainer = styled.div`
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   height: 100%;
   gap: 2rem 0.5rem;
 `;
@@ -68,6 +68,33 @@ export const PlayersContainer = styled.div`
 export const ConfigContainer = styled.div`
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+export const Config = styled.span`
+  display: flex;
+  align-items: center;
+
+  span {
+    color: ${({ theme }) => theme.colors.textSecondary};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+    font-size: 1rem;
+    margin-right: 1rem;
+  }
+
+  input {
+    width: 3.8rem;
+  }
+`;
+
+export const ReadyText = styled.p`
+  margin-top: 10rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1.125rem;
+  white-space: nowrap;
+  text-align: center;
+  margin-bottom: 1rem;
 `;

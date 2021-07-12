@@ -2,13 +2,23 @@ import styled, { css } from 'styled-components';
 
 interface CustomButtonProps {
   variant: 'primary' | 'secondary';
+  size?: 'normal' | 'large';
+  fullWidth?: boolean;
 }
 
 export const CustomButton = styled.button<CustomButtonProps>`
   padding: 0.75rem 1rem;
+  font-size: ${({ size }) => (size === 'normal' ? '1rem' : '1.5rem')};
   border: 1px solid transparent;
   border-radius: 0.75rem;
-  width: 100%;
+
+  ${({ fullWidth }) => {
+    if (fullWidth) {
+      return css`
+        width: 100%;
+      `;
+    }
+  }}
   display: flex;
   justify-content: center;
   white-space: nowrap;

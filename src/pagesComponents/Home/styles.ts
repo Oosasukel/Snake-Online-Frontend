@@ -101,6 +101,7 @@ export const ListItem = styled.li<ListItemProps>`
   gap: 2rem;
   padding: 0.25rem 0.5rem;
   margin-bottom: 0.5rem;
+  font-size: 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
   grid-template-columns: 1fr 4rem;

@@ -6,6 +6,7 @@ export const CustomInput = styled.input`
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 0.5rem;
+  font-size: 1rem;
   outline: none;
   transition: border 0.2s;
   width: 100%;

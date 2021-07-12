@@ -50,13 +50,16 @@ export const ForgotPasswordText = styled.span`
   width: min-content;
   white-space: nowrap;
   align-self: flex-end;
+  font-size: 1rem;
 `;
 
 export const FooterText = styled.p`
   color: ${({ theme }) => theme.colors.textSecondary};
   text-align: center;
+  font-size: 1rem;
 
   a {
+    font-size: 1rem;
     color: ${({ theme }) => theme.colors.primary};
     font-weight: ${({ theme }) => theme.fontWeights.bold};
   }

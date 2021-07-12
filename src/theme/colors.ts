@@ -10,6 +10,7 @@ export const colors = {
   itemHoverDisabled: 'rgba(49, 47, 55, 0.8)',
   itemHover: 'rgba(73, 70, 83, 0.8)',
   scrollbar: 'rgba(73, 70, 83, 0.8)',
+  snakePlaceholder: '#B2B2B2',
   snakeBody: '#E9E9E9',
   border: '#A3A3A3',
   danger: '#FF9A9A',
