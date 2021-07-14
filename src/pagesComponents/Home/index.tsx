@@ -4,14 +4,22 @@ import Chat from 'components/Chat';
 import Input from 'components/Input';
 import SnakeAvatar from 'components/SnakeAvatar';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import ModalNewRoom from './ModalNewRoom';
 import * as S from './styles';
 
 const Home = () => {
+  const [modalCreateOpen, setModalCreateOpen] = useState(false);
   const router = useRouter();
 
   return (
     <S.Container>
       <Background1 />
+      <ModalNewRoom
+        open={modalCreateOpen}
+        onClose={() => setModalCreateOpen(false)}
+        onCreate={() => router.push('/room')}
+      />
       <S.ReturnIcon
         onClick={() => router.push('/signin')}
         src="/icons/return.svg"
@@ -120,7 +128,7 @@ const Home = () => {
             </button>
           </form>
 
-          <Button>New Room</Button>
+          <Button onClick={() => setModalCreateOpen(true)}>New Room</Button>
         </S.RoomsOptions>
       </S.SectionRooms>
     </S.Container>
