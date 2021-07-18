@@ -13,6 +13,7 @@ const Home = () => {
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
   const router = useRouter();
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const searchRoom = useCallback(() => {}, []);
 
   return (

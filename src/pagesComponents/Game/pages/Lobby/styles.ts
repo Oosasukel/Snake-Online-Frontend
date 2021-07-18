@@ -1,3 +1,4 @@
+import { Form } from '@unform/web';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 
@@ -73,7 +74,7 @@ export const ConfigContainer = styled.div`
   justify-content: center;
 `;
 
-export const Config = styled.span`
+export const Config = styled(Form)`
   display: flex;
   align-items: center;
 

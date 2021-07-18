@@ -44,7 +44,7 @@ const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
       >
         <S.Title>Create a new room</S.Title>
         <Input
-          ref={inputRef}
+          name="name"
           placeholder="Name"
           style={{ marginBottom: '1rem' }}
         />
