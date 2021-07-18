@@ -1,23 +1,41 @@
+import { SubmitHandler } from '@unform/core';
 import Input from 'components/Input';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { GameContext } from 'pagesComponents/Game/context/GameContext';
+import { Message } from 'pagesComponents/Game/context/types';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { getStorage } from 'utils/storage';
 import * as S from './styles';
 
 const MAX_MESSAGES = 50;
 
-interface Message {
+interface ChatMessage {
   sender: string;
   time: string;
   text: string;
 }
 
+interface SubmitMessage {
+  message: string;
+}
+
 interface ChatProps {
-  onMessage?: (message: Message) => void;
+  onMessage?: (message: ChatMessage) => void;
 }
 
 const Chat = ({ onMessage }: ChatProps) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const user = useMemo(() => {
+    return getStorage('user');
+  }, []);
+  const { messageEmit, onNewMessage } = useContext(GameContext);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const messagesContainerRef = useRef<HTMLDivElement>();
-  const inputRef = useRef<HTMLInputElement>();
 
   const scrollToBottom = useCallback(() => {
     const scrollHeight = messagesContainerRef.current.scrollHeight;
@@ -34,73 +52,67 @@ const Chat = ({ onMessage }: ChatProps) => {
     return currentScroll >= offsetToConsiderBottom;
   }, []);
 
+  const currentTime = useCallback(() => {
+    const currentDate = new Date();
+    const hour = currentDate.getHours().toString().padStart(2, '0');
+    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+    const timeFormatted = `${hour}:${minutes}`;
+
+    return timeFormatted;
+  }, []);
+
   const addMessage = useCallback(
     (message: Message) => {
       const scrollWasBottom = scrollIsBottom();
+
+      const messageToAdd: ChatMessage = {
+        time: currentTime(),
+        text: message.text,
+        sender: message.sender,
+      };
 
       setMessages((previous) => {
         if (previous.length >= MAX_MESSAGES) {
           const numberOfMessagesToDelete = previous.length - MAX_MESSAGES + 1;
 
-          const messagesUpdated = [...previous, message];
+          const messagesUpdated = [...previous, messageToAdd];
           messagesUpdated.splice(0, numberOfMessagesToDelete);
 
           return messagesUpdated;
         } else {
-          return [...previous, message];
+          return [...previous, messageToAdd];
         }
       });
 
       if (onMessage) {
-        onMessage(message);
+        onMessage(messageToAdd);
       }
 
       if (scrollWasBottom) {
         setTimeout(scrollToBottom, 0);
       }
     },
-    [onMessage, scrollIsBottom, scrollToBottom]
+    [currentTime, onMessage, scrollIsBottom, scrollToBottom]
   );
 
-  const submitMessage = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-
-      const text = inputRef.current.value;
-      if (!text) return;
-
-      const currentDate = new Date();
-      const hour = currentDate.getHours().toString().padStart(2, '0');
-      const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-
-      inputRef.current.value = '';
+  const submitMessage: SubmitHandler<SubmitMessage> = useCallback(
+    ({ message }, { reset }) => {
+      if (!message) return;
 
       addMessage({
-        sender: 'Oosasukel',
-        time: `${hour}:${minutes}`,
-        text,
+        sender: user.nickname,
+        text: message,
       });
+
+      messageEmit(message);
+
+      reset();
     },
-    [addMessage]
+    [addMessage, messageEmit, user]
   );
 
   useEffect(() => {
-    const intervalRef = setInterval(() => {
-      const currentDate = new Date();
-      const hour = currentDate.getHours().toString().padStart(2, '0');
-      const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-
-      addMessage({
-        sender: 'Usuário aleatório',
-        time: `${hour}:${minutes}`,
-        text:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-      });
-    }, 3000);
-
-    return () => {
-      clearInterval(intervalRef);
-    };
+    onNewMessage(addMessage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -110,7 +122,9 @@ const Chat = ({ onMessage }: ChatProps) => {
         {messages.map((message, index) => (
           <S.Message key={index}>
             <S.MessageHeader>
-              <S.Sender>{message.sender}</S.Sender>
+              <S.Sender itIsMe={message.sender === user.nickname}>
+                {message.sender}
+              </S.Sender>
               <S.Time>{message.time}</S.Time>
             </S.MessageHeader>
             <S.MessageText>{message.text}</S.MessageText>
@@ -118,7 +132,7 @@ const Chat = ({ onMessage }: ChatProps) => {
         ))}
       </S.MessagesContainer>
       <S.SendMessageForm onSubmit={submitMessage}>
-        <Input ref={inputRef} placeholder="New Message..." />
+        <Input name="message" placeholder="New Message..." />
         <button type="submit">
           <S.SendMessageIcon src="/icons/send-message.svg" />
         </button>
