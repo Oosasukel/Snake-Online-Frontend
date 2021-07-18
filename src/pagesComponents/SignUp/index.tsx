@@ -11,10 +11,19 @@ const SignUp = () => {
     <S.Container>
       <S.Title>Sign up to Snake Online</S.Title>
 
-      <S.Form>
-        <Input placeholder="Nickname" style={{ marginBottom: '1rem' }} />
-        <Input placeholder="Email" style={{ marginBottom: '1rem' }} />
+      <S.Form onSubmit={(data) => console.log(data)}>
         <Input
+          name="nickname"
+          placeholder="Nickname"
+          style={{ marginBottom: '1rem' }}
+        />
+        <Input
+          name="email"
+          placeholder="Email"
+          style={{ marginBottom: '1rem' }}
+        />
+        <Input
+          name="password"
           type="password"
           placeholder="Password"
           style={{ marginBottom: '2rem' }}

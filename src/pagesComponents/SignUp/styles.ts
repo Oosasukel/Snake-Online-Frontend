@@ -1,3 +1,4 @@
+import { Form as UnformForm } from '@unform/web';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -17,7 +18,7 @@ export const Title = styled.h1`
   margin-bottom: 2rem;
 `;
 
-export const Form = styled.form`
+export const Form = styled(UnformForm)`
   display: flex;
   flex-direction: column;
   width: 17rem;

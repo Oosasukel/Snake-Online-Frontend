@@ -76,9 +76,13 @@ const Lobby = () => {
           />
         </S.PlayersContainer>
         <S.ConfigContainer>
-          <S.Config>
+          <S.Config
+            onSubmit={(data) => {
+              console.log(data);
+            }}
+          >
             <span>Map size</span>
-            <Input defaultValue="16" />
+            <Input name="size" defaultValue="16" />
           </S.Config>
 
           <S.ReadyText>

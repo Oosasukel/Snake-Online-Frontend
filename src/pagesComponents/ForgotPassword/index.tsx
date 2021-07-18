@@ -34,7 +34,7 @@ const ForgotPassword = () => {
           password.
         </S.Subtitle>
 
-        <Input placeholder="Email" />
+        <Input name="email" placeholder="Email" />
 
         <S.ButtonsContainer>
           <Button
