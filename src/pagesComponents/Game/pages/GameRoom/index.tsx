@@ -1,7 +1,7 @@
 import Background2 from 'components/Background2';
-import Chat from 'components/Chat';
 import Ranking from 'components/Ranking';
 import { useRouter } from 'next/router';
+import Chat from 'pagesComponents/Game/components/Chat';
 import * as S from './styles';
 
 const GameRoom = () => {

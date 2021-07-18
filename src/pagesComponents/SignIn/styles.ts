@@ -1,3 +1,4 @@
+import { Form as UnformForm } from '@unform/web';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -36,7 +37,7 @@ export const Logo = styled.img`
   transform: translate(-50%, -50%);
 `;
 
-export const Form = styled.form`
+export const Form = styled(UnformForm)`
   display: flex;
   flex-direction: column;
   width: 17rem;
@@ -51,6 +52,15 @@ export const ForgotPasswordText = styled.span`
   white-space: nowrap;
   align-self: flex-end;
   font-size: 1rem;
+`;
+
+export const Error = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  text-align: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 1rem;
 `;
 
 export const FooterText = styled.p`

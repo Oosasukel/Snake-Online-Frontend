@@ -1,16 +1,19 @@
+import { Form } from '@unform/web';
 import Background1 from 'components/Background1';
 import Button from 'components/Button';
-import Chat from 'components/Chat';
 import Input from 'components/Input';
 import SnakeAvatar from 'components/SnakeAvatar';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import Chat from 'pagesComponents/Game/components/Chat';
+import { useCallback, useState } from 'react';
 import ModalNewRoom from './ModalNewRoom';
 import * as S from './styles';
 
 const Home = () => {
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
   const router = useRouter();
+
+  const searchRoom = useCallback(() => {}, []);
 
   return (
     <S.Container>
@@ -121,12 +124,12 @@ const Home = () => {
           </S.RoomsList>
         </S.RoomsContainer>
         <S.RoomsOptions>
-          <form>
-            <Input placeholder="Type to search rooms..." />
+          <Form onSubmit={searchRoom}>
+            <Input name="hello" placeholder="Type to search rooms..." />
             <button type="submit">
               <S.SearchIcon src="/icons/search.svg" />
             </button>
-          </form>
+          </Form>
 
           <Button onClick={() => setModalCreateOpen(true)}>New Room</Button>
         </S.RoomsOptions>

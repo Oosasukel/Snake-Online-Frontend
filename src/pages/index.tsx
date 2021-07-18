@@ -1,7 +1,7 @@
-import Home from '../pagesComponents/Home';
+import Game from 'pagesComponents/Game';
 
 const HomePage = () => {
-  return <Home />;
+  return <Game />;
 };
 
 export default HomePage;

@@ -14,6 +14,7 @@ export const colors = {
   snakeBody: '#E9E9E9',
   border: '#A3A3A3',
   danger: '#FF9A9A',
+  error: '#ff6666',
   success: '#7EE45A',
   warn: '#FBC02A',
   balloonBackground: '#fff',

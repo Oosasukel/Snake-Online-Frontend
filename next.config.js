@@ -17,6 +17,11 @@ module.exports = {
                 "'unsafe-inline'",
                 'https://fonts.googleapis.com',
               ],
+              connectSrc: [
+                "'self'",
+                'http://localhost:3333',
+                'ws://localhost:3333',
+              ],
               fontSrc: [
                 "'self'",
                 "'unsafe-inline'",

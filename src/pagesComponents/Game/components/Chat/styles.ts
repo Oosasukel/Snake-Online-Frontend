@@ -1,3 +1,4 @@
+import { Form } from '@unform/web';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 
@@ -33,8 +34,13 @@ export const MessageHeader = styled.div`
   display: flex;
 `;
 
-export const Sender = styled.span`
-  color: ${({ theme }) => theme.colors.textPrimary};
+interface SenderProps {
+  itIsMe?: boolean;
+}
+
+export const Sender = styled.span<SenderProps>`
+  color: ${({ theme, itIsMe }) =>
+    itIsMe ? theme.colors.primary : theme.colors.textPrimary};
   font-size: 1.125rem;
   flex: 1;
 `;
@@ -51,7 +57,7 @@ export const MessageText = styled.p`
   margin-right: 0.5rem;
 `;
 
-export const SendMessageForm = styled.form`
+export const SendMessageForm = styled(Form)`
   display: grid;
   align-items: center;
   grid-template-columns: 1fr min-content;

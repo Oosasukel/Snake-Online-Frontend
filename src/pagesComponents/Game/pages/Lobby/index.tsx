@@ -1,13 +1,13 @@
 import Background1 from 'components/Background1';
 import Button from 'components/Button';
-import Chat from 'components/Chat';
 import Input from 'components/Input';
 import { useRouter } from 'next/router';
+import Chat from 'pagesComponents/Game/components/Chat';
 import { useRef, useState } from 'react';
 import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
-const Room = () => {
+const Lobby = () => {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const playerSlotRef = useRef<PlayerSlotRef>();
@@ -100,4 +100,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default Lobby;
