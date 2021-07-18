@@ -21,6 +21,8 @@ module.exports = {
                 "'self'",
                 'http://localhost:3333',
                 'ws://localhost:3333',
+                'https://snake-online-dev.herokuapp.com',
+                'ws://snake-online-dev.herokuapp.com',
               ],
               fontSrc: [
                 "'self'",
