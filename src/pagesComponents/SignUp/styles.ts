@@ -24,6 +24,15 @@ export const Form = styled(UnformForm)`
   width: 17rem;
 `;
 
+export const Error = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  text-align: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 2rem;
+`;
+
 export const FooterText = styled.p`
   color: ${({ theme }) => theme.colors.textSecondary};
   text-align: center;

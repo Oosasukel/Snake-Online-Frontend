@@ -63,7 +63,7 @@ const SignIn = () => {
 
         router.push('/');
       } catch (error) {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           setError('Nickname/Email or password are incorrect.');
         } else {
           setError('Something went wrong. Try again later.');

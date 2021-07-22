@@ -9,5 +9,12 @@ export const useApi = () => {
     []
   );
 
-  return { apiLogin };
+  const apiSignUp = useCallback(
+    async (data: { nickname: string; email: string; password: string }) => {
+      return api.post('/api/register', data);
+    },
+    []
+  );
+
+  return { apiLogin, apiSignUp };
 };
