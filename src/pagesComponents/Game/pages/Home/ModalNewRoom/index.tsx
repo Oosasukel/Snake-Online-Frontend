@@ -1,7 +1,12 @@
+import { FormHandles } from '@unform/core';
 import Button from 'components/Button';
 import Input from 'components/Input';
-import { FormEvent, MouseEventHandler, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import * as S from './styles';
+
+interface Data {
+  name: string;
+}
 
 interface ModalNewRoomProps {
   open: boolean;
@@ -10,35 +15,30 @@ interface ModalNewRoomProps {
 }
 
 const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<FormHandles>(null);
 
   const submitNewRoom = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-
-      const roomName = inputRef.current.value;
-
-      if (roomName) {
-        onCreate(roomName);
+    ({ name }: Data) => {
+      formRef.current.setFieldError('name', '');
+      if (!name) {
+        return formRef.current.setFieldError('name', 'Room name is required.');
       }
+
+      onCreate(name);
     },
     [onCreate]
   );
 
-  const handleCancel: MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
-      event.stopPropagation();
-
-      onClose();
-    },
-    [onClose]
-  );
+  const handleCancel = useCallback(() => {
+    onClose();
+  }, [onClose]);
 
   if (!open) return null;
 
   return (
     <S.Overlay onClick={onClose}>
-      <S.Container
+      <S.Form
+        ref={formRef}
         onClick={(event) => event.stopPropagation()}
         onSubmit={submitNewRoom}
       >
@@ -54,7 +54,7 @@ const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
           </Button>
           <Button type="submit">Create</Button>
         </S.Buttons>
-      </S.Container>
+      </S.Form>
     </S.Overlay>
   );
 };

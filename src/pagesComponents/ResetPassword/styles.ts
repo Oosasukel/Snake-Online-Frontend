@@ -29,3 +29,12 @@ export const Form = styled(UnformForm)`
   flex-direction: column;
   width: 17rem;
 `;
+
+export const Error = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  text-align: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 1rem;
+`;

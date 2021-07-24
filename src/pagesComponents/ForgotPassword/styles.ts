@@ -30,6 +30,15 @@ export const Form = styled(UnformForm)`
   width: 17rem;
 `;
 
+export const Error = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  text-align: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-top: 1rem;
+`;
+
 export const ButtonsContainer = styled.div`
   margin-top: 1rem;
   display: grid;

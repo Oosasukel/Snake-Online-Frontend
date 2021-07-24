@@ -1,4 +1,4 @@
-import { Form } from '@unform/web';
+import { Form as UnformForm } from '@unform/web';
 import styled from 'styled-components';
 
 export const Overlay = styled.div`
@@ -15,7 +15,7 @@ export const Overlay = styled.div`
   align-items: center;
 `;
 
-export const Container = styled(Form)`
+export const Form = styled(UnformForm)`
   width: 17rem;
   background-color: ${({ theme }) => theme.colors.background};
   padding: 1rem;
