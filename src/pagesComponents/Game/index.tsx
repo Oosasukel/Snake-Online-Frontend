@@ -1,12 +1,7 @@
-import { GameProvider } from './context/GameProvider';
 import Home from './pages/Home';
 
 const Game = () => {
-  return (
-    <GameProvider>
-      <Home />
-    </GameProvider>
-  );
+  return <Home />;
 };
 
 export default Game;

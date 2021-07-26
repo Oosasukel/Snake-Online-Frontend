@@ -1,10 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getStorage } from 'utils/storage';
 import { GameContext } from './GameContext';
-import { Message, MessageListener } from './types';
+import { Message, MessageListener, User } from './types';
 
-export const GameProvider = ({ children }) => {
+interface GameProviderProps {
+  user: User;
+  children: ReactNode;
+}
+
+export const GameProvider = ({ children, user }: GameProviderProps) => {
   const [socket, setSocket] = useState<Socket>();
   const [connected, setConnected] = useState(false);
   const messageListener = useRef<MessageListener>();
@@ -49,7 +54,7 @@ export const GameProvider = ({ children }) => {
 
   return (
     <GameContext.Provider
-      value={{ messageEmit, onNewMessage, joinRoom, connected }}
+      value={{ messageEmit, onNewMessage, joinRoom, connected, user }}
     >
       {children}
     </GameContext.Provider>

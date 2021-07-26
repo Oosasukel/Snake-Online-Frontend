@@ -13,7 +13,7 @@ import * as S from './styles';
 
 const Home = () => {
   const router = useRouter();
-  const { connected, joinRoom } = useContext(GameContext);
+  const { connected, joinRoom, user } = useContext(GameContext);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
   const signOut = useCallback(() => {
@@ -44,7 +44,13 @@ const Home = () => {
 
       <S.SectionPlayer>
         <S.PlayerInfo>
-          <span>Nickname</span>
+          <span
+            onClick={() => {
+              document.cookie = 'username=John Doe';
+            }}
+          >
+            {user.nickname}
+          </span>
           <SnakeAvatar />
         </S.PlayerInfo>
         <Chat />
