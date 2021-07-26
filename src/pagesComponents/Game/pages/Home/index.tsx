@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { removeStorage } from 'utils/storage';
+import { setCookie } from 'utils/cookies';
 import ModalNewRoom from './ModalNewRoom';
 import * as S from './styles';
 
@@ -17,9 +17,9 @@ const Home = () => {
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
   const signOut = useCallback(() => {
-    removeStorage('access_token');
-    removeStorage('refresh_token');
-    removeStorage('user');
+    setCookie('@Snake/access_token', '', { expires: new Date() });
+    setCookie('@Snake/refresh_token', '', { expires: new Date() });
+    setCookie('@Snake/user', '', { expires: new Date() });
     router.push('/signin');
   }, [router]);
 
@@ -44,13 +44,7 @@ const Home = () => {
 
       <S.SectionPlayer>
         <S.PlayerInfo>
-          <span
-            onClick={() => {
-              document.cookie = 'username=John Doe';
-            }}
-          >
-            {user.nickname}
-          </span>
+          <span>{user.nickname}</span>
           <SnakeAvatar />
         </S.PlayerInfo>
         <Chat />

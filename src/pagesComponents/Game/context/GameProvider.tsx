@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { getStorage } from 'utils/storage';
+import { getCookie } from 'utils/cookies';
 import { GameContext } from './GameContext';
 import { Message, MessageListener, User } from './types';
 
@@ -15,7 +15,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   const messageListener = useRef<MessageListener>();
 
   useEffect(() => {
-    const access_token = getStorage('access_token');
+    const access_token = getCookie('@Snake/access_token');
 
     const socketConnected = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
       query: { token: access_token },

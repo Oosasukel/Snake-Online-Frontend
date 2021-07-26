@@ -2,15 +2,7 @@ import { SubmitHandler } from '@unform/core';
 import Input from 'components/Input';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
 import { Message } from 'pagesComponents/Game/context/types';
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { getStorage } from 'utils/storage';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import * as S from './styles';
 
 const MAX_MESSAGES = 50;
@@ -30,10 +22,7 @@ interface ChatProps {
 }
 
 const Chat = ({ onMessage }: ChatProps) => {
-  const user = useMemo(() => {
-    return getStorage('user');
-  }, []);
-  const { messageEmit, onNewMessage } = useContext(GameContext);
+  const { messageEmit, onNewMessage, user } = useContext(GameContext);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const messagesContainerRef = useRef<HTMLDivElement>();
 

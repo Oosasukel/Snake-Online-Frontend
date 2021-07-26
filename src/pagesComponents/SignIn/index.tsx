@@ -2,10 +2,11 @@ import { FormHandles } from '@unform/core';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import { useApi } from 'hooks/useApi';
+import jwt_decode from 'jwt-decode';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useRef, useState } from 'react';
-import { setStorage } from 'utils/storage';
+import { setCookie } from 'utils/cookies';
 import * as yup from 'yup';
 import * as S from './styles';
 
@@ -57,9 +58,18 @@ const SignIn = () => {
         const { data } = await apiLogin({ login, password });
         const { access_token, refresh_token, user } = data;
 
-        setStorage('access_token', access_token);
-        setStorage('refresh_token', refresh_token);
-        setStorage('user', user);
+        const { exp: accessExp }: { exp: number } = jwt_decode(access_token);
+        const { exp: refreshExp }: { exp: number } = jwt_decode(refresh_token);
+
+        setCookie('@Snake/access_token', access_token, {
+          expires: new Date(accessExp * 1000),
+        });
+        setCookie('@Snake/refresh_token', refresh_token, {
+          expires: new Date(refreshExp * 1000),
+        });
+        setCookie('@Snake/user', JSON.stringify(user), {
+          expires: new Date(4107369600000),
+        });
 
         router.push('/');
       } catch (error) {
