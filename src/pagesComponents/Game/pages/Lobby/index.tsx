@@ -3,14 +3,20 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import { useRouter } from 'next/router';
 import Chat from 'pagesComponents/Game/components/Chat';
-import { useRef, useState } from 'react';
+import { GameContext } from 'pagesComponents/Game/context/GameContext';
+import { useContext, useRef, useState } from 'react';
 import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
 const Lobby = () => {
   const router = useRouter();
+  const { currentRoom, user } = useContext(GameContext);
   const [ready, setReady] = useState(false);
   const playerSlotRef = useRef<PlayerSlotRef>();
+
+  const goBack = () => {
+    router.push('/signin');
+  };
 
   return (
     <S.Container>
@@ -18,11 +24,8 @@ const Lobby = () => {
 
       <S.SectionChat>
         <S.TitleContainer>
-          <S.ReturnIcon
-            onClick={() => router.push('/')}
-            src="/icons/return.svg"
-          />
-          <h1>Sala do Rodrigo</h1>
+          <S.ReturnIcon onClick={goBack} src="/icons/return.svg" />
+          <h1>{currentRoom.name}</h1>
         </S.TitleContainer>
 
         <Chat
@@ -36,44 +39,29 @@ const Lobby = () => {
 
       <S.SectionRoom>
         <S.PlayersContainer>
-          <PlayerSlot empty={false} name="Oosasukel" owner />
-          <PlayerSlot
-            ref={playerSlotRef}
-            empty={false}
-            name="Oosasukel"
-            canKick
-          />
-          <PlayerSlot empty={false} name="Oosasukel" canKick ready />
-          <PlayerSlot empty={false} name="Oosasukel" canKick ready />
-          <PlayerSlot empty={false} name="Oosasukel" canKick ready />
-          <PlayerSlot empty={false} name="Oosasukel" canKick ready />
-          <PlayerSlot empty={false} name="Oosasukel" canKick ready />
-          <PlayerSlot empty={true} canClose name="Oosasukel" canKick />
-          <PlayerSlot empty={true} canClose name="Oosasukel" canKick />
-          <PlayerSlot
-            empty={true}
-            canClose
-            canOpen
-            closed
-            name="Oosasukel"
-            canKick
-          />
-          <PlayerSlot
-            empty={true}
-            canClose
-            canOpen
-            closed
-            name="Oosasukel"
-            canKick
-          />
-          <PlayerSlot
-            empty={true}
-            canClose
-            canOpen
-            closed
-            name="Oosasukel"
-            canKick
-          />
+          {currentRoom.slots.map((slot, index) => {
+            const hasUser = !['closed', 'open'].includes(slot);
+            const currentUser = hasUser
+              ? currentRoom.users.find((item) => item.id === slot)
+              : null;
+            const currentUserIsOwner = currentRoom.owner === currentUser?.id;
+            const iAmOwner = currentRoom.owner === user.id;
+            const closed = slot === 'closed';
+
+            return (
+              <PlayerSlot
+                key={index}
+                empty={!closed && !currentUser}
+                name={currentUser?.nickname}
+                owner={currentUserIsOwner}
+                canKick={iAmOwner && currentUser?.id !== user.id}
+                canClose={iAmOwner && !closed}
+                canOpen={iAmOwner && closed}
+                closed={closed}
+                ready={iAmOwner && currentUser?.ready}
+              />
+            );
+          })}
         </S.PlayersContainer>
         <S.ConfigContainer>
           <S.Config
@@ -82,7 +70,7 @@ const Lobby = () => {
             }}
           >
             <span>Map size</span>
-            <Input name="size" defaultValue="16" />
+            <Input name="size" defaultValue={currentRoom.mapSize} />
           </S.Config>
 
           <S.ReadyText>
