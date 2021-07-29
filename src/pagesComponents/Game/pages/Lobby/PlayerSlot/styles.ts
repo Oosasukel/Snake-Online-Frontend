@@ -35,8 +35,13 @@ export const Container = styled.div<ContainerProps>`
   }}
 `;
 
-export const PlayerName = styled.span`
-  color: ${({ theme }) => theme.colors.textPrimary};
+interface PlayerNameProps {
+  itIsMe?: boolean;
+}
+
+export const PlayerName = styled.span<PlayerNameProps>`
+  color: ${({ theme, itIsMe }) =>
+    itIsMe ? theme.colors.primary : theme.colors.textPrimary};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   font-size: 1.125rem;
   margin-bottom: 1rem;
@@ -143,7 +148,7 @@ export const SlotClosedIcon = styled(SVG)`
 `;
 
 export const MessageBox = styled.div`
-  z-index: 2;
+  z-index: 4;
   display: flex;
   align-items: center;
   position: absolute;

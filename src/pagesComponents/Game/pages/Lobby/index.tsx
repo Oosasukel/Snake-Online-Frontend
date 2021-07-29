@@ -1,22 +1,38 @@
 import Background1 from 'components/Background1';
 import Button from 'components/Button';
 import Input from 'components/Input';
-import { useRouter } from 'next/router';
-import Chat from 'pagesComponents/Game/components/Chat';
+import Chat, { ChatMessage } from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { useContext, useRef, useState } from 'react';
+import { createRef, useCallback, useContext, useMemo, useState } from 'react';
 import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
 const Lobby = () => {
-  const router = useRouter();
-  const { currentRoom, user } = useContext(GameContext);
+  const { currentRoom, user, leaveRoom } = useContext(GameContext);
   const [ready, setReady] = useState(false);
-  const playerSlotRef = useRef<PlayerSlotRef>();
+  const playersSlotsRefs = useMemo(
+    () => Array.from(Array(12).keys()).map(() => createRef<PlayerSlotRef>()),
+    []
+  );
 
-  const goBack = () => {
-    router.push('/signin');
-  };
+  const showBalloonMessage = useCallback(
+    (message: ChatMessage) => {
+      const userSender = currentRoom.users.find(
+        (item) => item.nickname === message.sender
+      );
+
+      if (!userSender) return;
+
+      const slotIndex = currentRoom.slots.findIndex(
+        (slot) => slot === userSender.id
+      );
+
+      if (slotIndex === -1) return;
+
+      playersSlotsRefs[slotIndex].current?.message(message.text);
+    },
+    [currentRoom, playersSlotsRefs]
+  );
 
   return (
     <S.Container>
@@ -24,17 +40,11 @@ const Lobby = () => {
 
       <S.SectionChat>
         <S.TitleContainer>
-          <S.ReturnIcon onClick={goBack} src="/icons/return.svg" />
+          <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
           <h1>{currentRoom.name}</h1>
         </S.TitleContainer>
 
-        <Chat
-          onMessage={(message) => {
-            if (message.sender === 'Oosasukel') {
-              playerSlotRef.current.message(message.text);
-            }
-          }}
-        />
+        <Chat onMessage={showBalloonMessage} />
       </S.SectionChat>
 
       <S.SectionRoom>
@@ -50,6 +60,7 @@ const Lobby = () => {
 
             return (
               <PlayerSlot
+                ref={playersSlotsRefs[index]}
                 key={index}
                 empty={!closed && !currentUser}
                 name={currentUser?.nickname}
@@ -59,6 +70,7 @@ const Lobby = () => {
                 canOpen={iAmOwner && closed}
                 closed={closed}
                 ready={iAmOwner && currentUser?.ready}
+                itIsMe={currentUser?.id === user.id}
               />
             );
           })}

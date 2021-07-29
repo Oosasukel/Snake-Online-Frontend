@@ -7,7 +7,7 @@ import * as S from './styles';
 
 const MAX_MESSAGES = 50;
 
-interface ChatMessage {
+export interface ChatMessage {
   sender: string;
   time: string;
   text: string;
@@ -119,8 +119,7 @@ const Chat = ({ onMessage }: ChatProps) => {
 
   useEffect(() => {
     onNewMessage(addMessage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [addMessage, onNewMessage]);
 
   return (
     <S.Container>

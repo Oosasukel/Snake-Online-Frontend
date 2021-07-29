@@ -46,4 +46,3 @@ export interface Room {
   } | null;
 }
 export type MessageListener = (message: Message) => void;
-export type UpdateRoomsListener = (rooms: Room[]) => void;

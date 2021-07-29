@@ -11,6 +11,7 @@ interface PlayerProps {
   canClose?: boolean;
   canOpen?: boolean;
   closed?: boolean;
+  itIsMe?: boolean;
 }
 
 export interface PlayerSlotRef {
@@ -18,27 +19,34 @@ export interface PlayerSlotRef {
 }
 
 const PlayerSlot = forwardRef<PlayerSlotRef, PlayerProps>(
-  ({ owner, canKick, ready, empty, name, canClose, canOpen, closed }, ref) => {
+  (
+    { owner, canKick, ready, empty, name, canClose, canOpen, closed, itIsMe },
+    ref
+  ) => {
     const [message, setMessage] = useState('');
     const [timeoutRef, setTimeoutRef] = useState<
       ReturnType<typeof setTimeout>
     >();
 
-    useImperativeHandle(ref, () => ({
-      message: (message: string) => {
-        setMessage(message);
+    useImperativeHandle(
+      ref,
+      () => ({
+        message: (message: string) => {
+          setMessage(message);
 
-        if (timeoutRef) {
-          clearTimeout(timeoutRef);
-        }
+          if (timeoutRef) {
+            clearTimeout(timeoutRef);
+          }
 
-        const timeoutId = setTimeout(() => {
-          setMessage('');
-        }, 4000);
+          const timeoutId = setTimeout(() => {
+            setMessage('');
+          }, 4000);
 
-        setTimeoutRef(timeoutId);
-      },
-    }));
+          setTimeoutRef(timeoutId);
+        },
+      }),
+      [timeoutRef]
+    );
 
     return (
       <S.Container empty={empty} closed={closed}>
@@ -62,7 +70,7 @@ const PlayerSlot = forwardRef<PlayerSlotRef, PlayerProps>(
                     <S.MessageText>{message}</S.MessageText>
                   </S.MessageBox>
                 )}
-                <S.PlayerName>{name}</S.PlayerName>
+                <S.PlayerName itIsMe={itIsMe}>{name}</S.PlayerName>
               </>
             )}
             <SnakeAvatar empty={empty} />

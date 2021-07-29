@@ -36,9 +36,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
       cookies.set('@Snake/access_token', newAccess, {
         expires: new Date(accessExp * 1000),
+        httpOnly: false,
       });
       cookies.set('@Snake/refresh_token', newRefresh, {
         expires: new Date(refreshExp * 1000),
+        httpOnly: false,
       });
 
       return {
