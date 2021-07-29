@@ -34,6 +34,31 @@ export const ReturnIcon = styled(SVG)`
   }
 `;
 
+export const OnlineUsers = styled.div`
+  display: flex;
+  position: absolute;
+  right: 4rem;
+  z-index: 2;
+  align-items: center;
+  top: 1rem;
+
+  span {
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-size: 1rem;
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+  }
+`;
+
+export const UsersIcon = styled(SVG)`
+  min-width: 2rem;
+  min-height: 2rem;
+  margin-right: 0.5rem;
+
+  path {
+    fill: ${({ theme }) => theme.colors.textPrimary};
+  }
+`;
+
 export const Title = styled.div`
   color: ${({ theme }) => theme.colors.textPrimary};
 `;

@@ -3,31 +3,22 @@ import Background1 from 'components/Background1';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import SnakeAvatar from 'components/SnakeAvatar';
-import { useRouter } from 'next/router';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { setCookie } from 'utils/cookies';
+import { useCallback, useContext, useState } from 'react';
 import ModalNewRoom from './ModalNewRoom';
 import * as S from './styles';
 
 const Home = () => {
-  const router = useRouter();
-  const { connected, joinRoom, user } = useContext(GameContext);
+  const {
+    joinRoom,
+    user,
+    rooms,
+    playersOnline,
+    createRoom,
+    signOut,
+  } = useContext(GameContext);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
-
-  const signOut = useCallback(() => {
-    setCookie('@Snake/access_token', '', { expires: new Date() });
-    setCookie('@Snake/refresh_token', '', { expires: new Date() });
-    setCookie('@Snake/user', '', { expires: new Date() });
-    router.push('/signin');
-  }, [router]);
-
-  useEffect(() => {
-    if (connected) {
-      joinRoom('home');
-    }
-  }, [connected, joinRoom, router]);
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const searchRoom = useCallback(() => {}, []);
@@ -38,9 +29,14 @@ const Home = () => {
       <ModalNewRoom
         open={modalCreateOpen}
         onClose={() => setModalCreateOpen(false)}
-        onCreate={(roomName) => console.log(roomName)}
+        onCreate={(roomName) => createRoom(roomName)}
       />
-      <S.ReturnIcon onClick={signOut} src="/icons/return.svg" />
+      <S.ReturnIcon onClick={() => signOut()} src="/icons/return.svg" />
+
+      <S.OnlineUsers>
+        <S.UsersIcon src="/icons/users.svg" />
+        <span>{playersOnline}</span>
+      </S.OnlineUsers>
 
       <S.SectionPlayer>
         <S.PlayerInfo>
@@ -56,26 +52,25 @@ const Home = () => {
             <span>Players</span>
           </S.RoomsHeader>
           <S.RoomsList>
-            <S.ListItem onClick={() => joinRoom('sala 1')}>
-              <span>Sala 1</span>
-              <span>6/8</span>
-            </S.ListItem>
-            <S.ListItem onClick={() => joinRoom('sala 2')}>
-              <span>Sala 2</span>
-              <span>6/8</span>
-            </S.ListItem>
-            <S.ListItem onClick={() => joinRoom('sala 3')}>
-              <span>Sala 3</span>
-              <span>6/8</span>
-            </S.ListItem>
-            <S.ListItem onClick={() => joinRoom('sala 4')}>
-              <span>Sala 4</span>
-              <span>6/8</span>
-            </S.ListItem>
-            <S.ListItem disabled>
-              <span>Sala 5</span>
-              <span>8/8</span>
-            </S.ListItem>
+            {rooms.map((room) => {
+              const maxUsers = room.slots.filter((slot) => slot !== 'closed')
+                .length;
+              const usersLength = room.users.length;
+              const enabled = maxUsers !== usersLength;
+
+              return (
+                <S.ListItem
+                  disabled={!enabled}
+                  key={room.id}
+                  onClick={enabled ? () => joinRoom(room.id) : undefined}
+                >
+                  <span>{room.name}</span>
+                  <span>
+                    {usersLength}/{maxUsers}
+                  </span>
+                </S.ListItem>
+              );
+            })}
           </S.RoomsList>
         </S.RoomsContainer>
         <S.RoomsOptions>

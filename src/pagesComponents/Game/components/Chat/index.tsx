@@ -7,7 +7,7 @@ import * as S from './styles';
 
 const MAX_MESSAGES = 50;
 
-interface ChatMessage {
+export interface ChatMessage {
   sender: string;
   time: string;
   text: string;
@@ -60,16 +60,33 @@ const Chat = ({ onMessage }: ChatProps) => {
         sender: message.sender,
       };
 
+      const mergeMessages = (previous: ChatMessage[], last: ChatMessage) => {
+        if (previous.length === 0) {
+          return [last];
+        }
+
+        const messagesUpdated = [...previous];
+
+        if (messagesUpdated[previous.length - 1].sender === last.sender) {
+          messagesUpdated[previous.length - 1].text += `\n${last.text}`;
+        } else {
+          messagesUpdated.push(last);
+        }
+
+        return messagesUpdated;
+      };
+
       setMessages((previous) => {
         if (previous.length >= MAX_MESSAGES) {
           const numberOfMessagesToDelete = previous.length - MAX_MESSAGES + 1;
 
-          const messagesUpdated = [...previous, messageToAdd];
+          const messagesUpdated = mergeMessages(previous, messageToAdd);
+
           messagesUpdated.splice(0, numberOfMessagesToDelete);
 
           return messagesUpdated;
         } else {
-          return [...previous, messageToAdd];
+          return mergeMessages(previous, messageToAdd);
         }
       });
 
@@ -102,8 +119,7 @@ const Chat = ({ onMessage }: ChatProps) => {
 
   useEffect(() => {
     onNewMessage(addMessage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [addMessage, onNewMessage]);
 
   return (
     <S.Container>
@@ -116,7 +132,9 @@ const Chat = ({ onMessage }: ChatProps) => {
               </S.Sender>
               <S.Time>{message.time}</S.Time>
             </S.MessageHeader>
-            <S.MessageText>{message.text}</S.MessageText>
+            {message.text.split('\n').map((text, index) => (
+              <S.MessageText key={index}>{text}</S.MessageText>
+            ))}
           </S.Message>
         ))}
       </S.MessagesContainer>
