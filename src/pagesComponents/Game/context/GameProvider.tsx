@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getCookie, setCookie } from 'utils/cookies';
 import { GameContext, GAME_ROUTES } from './GameContext';
-import { Message, MessageListener, Room, User } from './types';
+import { HomeRoom, LobbyRoom, Message, MessageListener, User } from './types';
 
 interface GameProviderProps {
   user: User;
@@ -12,8 +12,8 @@ interface GameProviderProps {
 
 export const GameProvider = ({ children, user }: GameProviderProps) => {
   const [socket, setSocket] = useState<Socket>();
-  const [currentRoom, setCurrentRoom] = useState<Room>();
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<LobbyRoom>();
+  const [rooms, setRooms] = useState<HomeRoom[]>([]);
   const [playersOnline, setPlayersOnline] = useState(0);
   const messageListener = useRef<MessageListener>();
   const [currentRoute, setCurrentRoute] = useState<GAME_ROUTES>('home');
@@ -38,8 +38,9 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
       /*
         Errors:
           Room already exists.
+          All players need accept.
       */
-      console.log('error', error);
+      console.error('error', error);
     });
 
     socketConnected.on('disconnect', (reason) => {
@@ -53,23 +54,40 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         messageListener.current(message);
       }
     });
-    socketConnected.on('rooms-updated', (rooms: Room[]) => setRooms(rooms));
+    socketConnected.on('rooms-updated', (rooms: HomeRoom[]) => setRooms(rooms));
     socketConnected.on('users-updated', (playersCount) =>
       setPlayersOnline(playersCount)
     );
-    socketConnected.on('room-successfuly-created', (room: Room) => {
+    socketConnected.on('room-successfuly-created', (room: LobbyRoom) => {
       setCurrentRoom(room);
       setCurrentRoute('lobby');
     });
-    socketConnected.on('joined-room', (room: Room) => {
+    socketConnected.on('joined-room', (room: LobbyRoom) => {
       setCurrentRoom(room);
       setCurrentRoute('lobby');
     });
-    socketConnected.on('user-left-room', (room: Room) => setCurrentRoom(room));
-    socketConnected.on('new-user-joined-room', (room: Room) =>
+    socketConnected.on('user-left-room', (room: LobbyRoom) =>
+      setCurrentRoom(room)
+    );
+    socketConnected.on('new-user-joined-room', (room: LobbyRoom) =>
       setCurrentRoom(room)
     );
     socketConnected.on('left-room', () => setCurrentRoute('home'));
+    socketConnected.on(
+      'slot-updated',
+      (index: number, newState: 'closed' | 'open') =>
+        setCurrentRoom((previous) => {
+          const roomUpdated = { ...previous };
+          roomUpdated.slots[index] = newState;
+          return roomUpdated;
+        })
+    );
+    socketConnected.on('game-started', (room: LobbyRoom) =>
+      setCurrentRoom(room)
+    );
+    socketConnected.on('room-user-changed', (room: LobbyRoom) =>
+      setCurrentRoom(room)
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -122,6 +140,42 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
     [socket]
   );
 
+  const kickPlayer = useCallback(
+    (userId: string) => {
+      if (socket) {
+        socket.emit('room:kick', userId);
+      }
+    },
+    [socket]
+  );
+
+  const openSlot = useCallback(
+    (index: number) => {
+      if (socket) {
+        socket.emit('room:open-slot', index);
+      }
+    },
+    [socket]
+  );
+
+  const closeSlot = useCallback(
+    (index: number) => {
+      if (socket) {
+        socket.emit('room:close-slot', index);
+      }
+    },
+    [socket]
+  );
+
+  const updateReady = useCallback(
+    (ready: boolean) => {
+      if (socket) {
+        socket.emit('room:update-ready', ready);
+      }
+    },
+    [socket]
+  );
+
   return (
     <GameContext.Provider
       value={{
@@ -136,6 +190,10 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         rooms,
         playersOnline,
         user,
+        closeSlot,
+        updateReady,
+        kickPlayer,
+        openSlot,
       }}
     >
       {children}

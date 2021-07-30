@@ -3,13 +3,35 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Chat, { ChatMessage } from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { createRef, useCallback, useContext, useMemo, useState } from 'react';
+import { RoomUser } from 'pagesComponents/Game/context/types';
+import { createRef, useCallback, useContext, useMemo } from 'react';
 import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
 const Lobby = () => {
-  const { currentRoom, user, leaveRoom } = useContext(GameContext);
-  const [ready, setReady] = useState(false);
+  const {
+    currentRoom,
+    user,
+    leaveRoom,
+    closeSlot,
+    openSlot,
+    updateReady,
+    kickPlayer,
+  } = useContext(GameContext);
+  const imReady = useMemo(() => {
+    const me =
+      currentRoom.users.find((item) => item.id === user.id) || ({} as RoomUser);
+    return me.ready;
+  }, [currentRoom, user]);
+  const iAmOwner = useMemo(() => currentRoom.owner === user.id, [
+    currentRoom,
+    user,
+  ]);
+  const allPlayersAccepted = useMemo(
+    () => currentRoom.users.filter((item) => !item.ready).length === 0,
+    [currentRoom]
+  );
+
   const playersSlotsRefs = useMemo(
     () => Array.from(Array(12).keys()).map(() => createRef<PlayerSlotRef>()),
     []
@@ -55,7 +77,6 @@ const Lobby = () => {
               ? currentRoom.users.find((item) => item.id === slot)
               : null;
             const currentUserIsOwner = currentRoom.owner === currentUser?.id;
-            const iAmOwner = currentRoom.owner === user.id;
             const closed = slot === 'closed';
 
             return (
@@ -71,6 +92,11 @@ const Lobby = () => {
                 closed={closed}
                 ready={iAmOwner && currentUser?.ready}
                 itIsMe={currentUser?.id === user.id}
+                onClose={() => closeSlot(index)}
+                onOpen={() => openSlot(index)}
+                onKick={
+                  currentUser ? () => kickPlayer(currentUser.id) : undefined
+                }
               />
             );
           })}
@@ -91,12 +117,17 @@ const Lobby = () => {
             ready to start
           </S.ReadyText>
           <Button
-            variant={ready ? 'secondary' : 'primary'}
+            variant={imReady ? 'secondary' : 'primary'}
             size="large"
             fullWidth={false}
-            onClick={() => setReady(!ready)}
+            disabled={iAmOwner && !allPlayersAccepted}
+            onClick={
+              iAmOwner && !allPlayersAccepted
+                ? undefined
+                : () => updateReady(!imReady)
+            }
           >
-            {ready ? 'CANCEL' : 'READY'}
+            {imReady ? 'CANCEL' : 'READY'}
           </Button>
         </S.ConfigContainer>
       </S.SectionRoom>

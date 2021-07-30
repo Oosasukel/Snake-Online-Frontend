@@ -53,10 +53,7 @@ const Home = () => {
           </S.RoomsHeader>
           <S.RoomsList>
             {rooms.map((room) => {
-              const maxUsers = room.slots.filter((slot) => slot !== 'closed')
-                .length;
-              const usersLength = room.users.length;
-              const enabled = maxUsers !== usersLength;
+              const enabled = room.playing || room.maxUsers > room.currentUsers;
 
               return (
                 <S.ListItem
@@ -66,7 +63,7 @@ const Home = () => {
                 >
                   <span>{room.name}</span>
                   <span>
-                    {usersLength}/{maxUsers}
+                    {room.currentUsers}/{room.maxUsers}
                   </span>
                 </S.ListItem>
               );

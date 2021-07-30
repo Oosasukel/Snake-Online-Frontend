@@ -12,6 +12,9 @@ interface PlayerProps {
   canOpen?: boolean;
   closed?: boolean;
   itIsMe?: boolean;
+  onKick?: () => void;
+  onClose?: () => void;
+  onOpen?: () => void;
 }
 
 export interface PlayerSlotRef {
@@ -20,7 +23,20 @@ export interface PlayerSlotRef {
 
 const PlayerSlot = forwardRef<PlayerSlotRef, PlayerProps>(
   (
-    { owner, canKick, ready, empty, name, canClose, canOpen, closed, itIsMe },
+    {
+      owner,
+      canKick,
+      ready,
+      empty,
+      name,
+      canClose,
+      canOpen,
+      closed,
+      itIsMe,
+      onClose,
+      onKick,
+      onOpen,
+    },
     ref
   ) => {
     const [message, setMessage] = useState('');
@@ -53,16 +69,22 @@ const PlayerSlot = forwardRef<PlayerSlotRef, PlayerProps>(
         {closed ? (
           <S.ClosedContainer>
             <S.SlotClosedIcon src="/icons/close.svg" />
-            {canOpen && <span>Click to open</span>}
+            {canOpen && <span onClick={onOpen}>Click to open</span>}
           </S.ClosedContainer>
         ) : (
           <>
             {empty ? (
-              <>{canClose && <S.EmptyText>Click to close</S.EmptyText>}</>
+              <>
+                {canClose && (
+                  <S.EmptyText onClick={onClose}>Click to close</S.EmptyText>
+                )}
+              </>
             ) : (
               <>
                 {owner && <S.OwnerIcon src="/icons/crown.svg" />}
-                {canKick && <S.CloseIcon src="/icons/close.svg" />}
+                {canKick && (
+                  <S.CloseIcon onClick={onKick} src="/icons/close.svg" />
+                )}
                 {ready && <S.CheckIcon src="/icons/check.svg" />}
                 {message && (
                   <S.MessageBox>

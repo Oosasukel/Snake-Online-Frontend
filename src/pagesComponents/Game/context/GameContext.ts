@@ -1,12 +1,12 @@
 import { createContext } from 'react';
-import { MessageListener, Room, User } from './types';
+import { HomeRoom, LobbyRoom, MessageListener, User } from './types';
 
 export type GAME_ROUTES = 'lobby' | 'home' | 'game';
 
 interface GameContextProps {
   user: User;
-  currentRoom?: Room;
-  rooms: Room[];
+  currentRoom?: LobbyRoom;
+  rooms: HomeRoom[];
   playersOnline: number;
   currentRoute: GAME_ROUTES;
   messageEmit: (message: string) => void;
@@ -15,6 +15,10 @@ interface GameContextProps {
   joinRoom: (id: string) => void;
   leaveRoom: () => void;
   createRoom: (name: string) => void;
+  kickPlayer: (userId: string) => void;
+  openSlot: (index: number) => void;
+  closeSlot: (index: number) => void;
+  updateReady: (ready: boolean) => void;
 }
 
 export const GameContext = createContext({} as GameContextProps);
