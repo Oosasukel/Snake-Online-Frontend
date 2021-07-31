@@ -1,95 +1,48 @@
 import Background2 from 'components/Background2';
 import Ranking from 'components/Ranking';
-import { useRouter } from 'next/router';
 import Chat from 'pagesComponents/Game/components/Chat';
+import { GameContext } from 'pagesComponents/Game/context/GameContext';
+import { useContext, useEffect, useRef } from 'react';
+import { Game } from './classes/Game';
 import * as S from './styles';
 
 const GameRoom = () => {
-  const router = useRouter();
+  const { currentGame, currentRoom, leaveRoom, user } = useContext(GameContext);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext('2d');
+    const game = new Game(ctx, currentGame.mapSize);
+    game.drawGame();
+  }, [currentGame.mapSize]);
 
   return (
     <S.Container>
       <Background2 />
 
-      <S.ReturnIcon onClick={() => router.push('/')} src="/icons/return.svg" />
-      <S.Title>Sala do Rodrigo</S.Title>
+      <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
+      <S.Title>{currentRoom.name}</S.Title>
 
       <Chat />
 
-      <S.SectionGame></S.SectionGame>
+      <S.SectionGame>
+        <canvas ref={canvasRef} />
+      </S.SectionGame>
 
       <S.SectionRanking>
         <Ranking
-          myId="2"
-          users={[
-            {
-              id: '1',
-              name: 'SoulSilfer',
-              points: 18,
-            },
+          myId={user.id}
+          users={currentGame.users.map((item) => {
+            const currentUserNickname = currentRoom.users.find(
+              (userItem) => userItem.id === item.id
+            )?.nickname;
 
-            {
-              id: '2',
-              name: 'Oosasukel',
-              points: 16,
-            },
-
-            {
-              id: '3',
-              name: 'TiaDosBolin',
-              points: 15,
-            },
-
-            {
-              id: '4',
-              name: 'Aiped Abreu',
-              points: 10,
-            },
-
-            {
-              id: '5',
-              name: 'Teste da Silva',
-              points: 9,
-            },
-
-            {
-              id: '6',
-              name: 'Anão Careca',
-              points: 8,
-            },
-
-            {
-              id: '7',
-              name: 'False',
-              points: 8,
-            },
-
-            {
-              id: '8',
-              name: 'Júnior',
-              points: 7,
-            },
-            {
-              id: '9',
-              name: 'Pudim de Goiaba',
-              points: 7,
-            },
-            {
-              id: '10',
-              name: 'While true',
-              points: 7,
-            },
-            {
-              id: '11',
-              name: 'Xuazineguer',
-              points: 6,
-            },
-            {
-              id: '12',
-              name: 'Baunilha',
-              points: 6,
-            },
-          ]}
+            return {
+              id: item.id,
+              name: currentUserNickname,
+              points: item.gamePoints,
+            };
+          })}
         />
 
         <div />

@@ -6,10 +6,13 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 
   span {
     font-size: 0.75rem;
-    color: ${({ theme }) => theme.colors.error};
+    color: ${({ theme, error }) =>
+      error ? theme.colors.error : theme.colors.textSecondary};
   }
 
   input {

@@ -4,10 +4,11 @@ import * as S from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  helperText?: string;
 }
 
 // eslint-disable-next-line react/display-name
-const Input = ({ name, style, ...rest }: InputProps) => {
+const Input = ({ name, helperText, style, ...rest }: InputProps) => {
   const { fieldName, defaultValue, registerField, error } = useField(name);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -30,7 +31,7 @@ const Input = ({ name, style, ...rest }: InputProps) => {
   return (
     <S.Container style={style} error={!!error}>
       <input defaultValue={defaultValue} ref={inputRef} {...rest} />
-      {error && <span>{error}</span>}
+      {(error || helperText) && <span>{error || helperText}</span>}
     </S.Container>
   );
 };

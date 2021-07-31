@@ -3,7 +3,14 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getCookie, setCookie } from 'utils/cookies';
 import { GameContext, GAME_ROUTES } from './GameContext';
-import { HomeRoom, LobbyRoom, Message, MessageListener, User } from './types';
+import {
+  Game,
+  HomeRoom,
+  LobbyRoom,
+  Message,
+  MessageListener,
+  User,
+} from './types';
 
 interface GameProviderProps {
   user: User;
@@ -13,6 +20,7 @@ interface GameProviderProps {
 export const GameProvider = ({ children, user }: GameProviderProps) => {
   const [socket, setSocket] = useState<Socket>();
   const [currentRoom, setCurrentRoom] = useState<LobbyRoom>();
+  const [currentGame, setCurrentGame] = useState<Game>();
   const [rooms, setRooms] = useState<HomeRoom[]>([]);
   const [playersOnline, setPlayersOnline] = useState(0);
   const messageListener = useRef<MessageListener>();
@@ -72,6 +80,9 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
     socketConnected.on('new-user-joined-room', (room: LobbyRoom) =>
       setCurrentRoom(room)
     );
+    socketConnected.on('room:config-updated', (room: LobbyRoom) =>
+      setCurrentRoom(room)
+    );
     socketConnected.on('left-room', () => setCurrentRoute('home'));
     socketConnected.on(
       'slot-updated',
@@ -82,9 +93,10 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
           return roomUpdated;
         })
     );
-    socketConnected.on('game-started', (room: LobbyRoom) =>
-      setCurrentRoom(room)
-    );
+    socketConnected.on('game-started', (game: Game) => {
+      setCurrentGame(game);
+      setCurrentRoute('game');
+    });
     socketConnected.on('room-user-changed', (room: LobbyRoom) =>
       setCurrentRoom(room)
     );
@@ -176,6 +188,15 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
     [socket]
   );
 
+  const updateRoomConfig = useCallback(
+    (config: { size: number }) => {
+      if (socket) {
+        socket.emit('room:update-config', config);
+      }
+    },
+    [socket]
+  );
+
   return (
     <GameContext.Provider
       value={{
@@ -187,11 +208,13 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         signOut,
         currentRoute,
         currentRoom,
+        currentGame,
         rooms,
         playersOnline,
         user,
         closeSlot,
         updateReady,
+        updateRoomConfig,
         kickPlayer,
         openSlot,
       }}

@@ -53,7 +53,8 @@ const Home = () => {
           </S.RoomsHeader>
           <S.RoomsList>
             {rooms.map((room) => {
-              const enabled = room.playing || room.maxUsers > room.currentUsers;
+              const enabled =
+                !room.playing && room.maxUsers > room.currentUsers;
 
               return (
                 <S.ListItem

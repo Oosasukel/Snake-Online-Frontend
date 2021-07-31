@@ -47,7 +47,10 @@ export const Title = styled.div`
 `;
 
 export const SectionGame = styled.section`
-  background-color: blueviolet;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   grid-area: game;
   z-index: 1;
 `;

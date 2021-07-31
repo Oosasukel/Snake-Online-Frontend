@@ -77,12 +77,13 @@ export const ConfigContainer = styled.div`
 export const Config = styled(Form)`
   display: flex;
   align-items: center;
+  flex-direction: column;
 
-  span {
+  & > span {
     color: ${({ theme }) => theme.colors.textSecondary};
     font-weight: ${({ theme }) => theme.fontWeights.bold};
     font-size: 1rem;
-    margin-right: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   input {

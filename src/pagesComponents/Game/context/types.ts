@@ -24,6 +24,7 @@ export interface HomeRoom {
   maxUsers: number;
   currentUsers: number;
   playing: boolean;
+  mapSize: number;
 }
 
 export interface LobbyRoom {
@@ -47,6 +48,7 @@ export interface RoomUser {
 export interface Game {
   roomId: string;
   id: string;
+  mapSize: number;
   users: Array<{
     id: string;
     gamePoints: number;
