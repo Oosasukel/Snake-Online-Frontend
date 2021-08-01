@@ -34,7 +34,7 @@ export interface LobbyRoom {
   users: RoomUser[];
   slots: string[] /* 'closed' | 'open' | userId */;
   mapSize: number;
-  game: string | null;
+  playing: boolean;
 }
 
 export interface RoomUser {
@@ -46,31 +46,34 @@ export interface RoomUser {
 }
 
 export interface Game {
-  roomId: string;
   id: string;
   mapSize: number;
-  users: Array<{
-    id: string;
-    gamePoints: number;
-    body: Array<{
-      x: number;
-      y: number;
-    }>;
-    head: {
-      x: number;
-      y: number;
-    };
-    direction: up | down | left | right;
-  }>;
+  users: GameUser[];
   fruits: Array<{
     x: number;
     y: number;
   }>;
 }
 
-type up = { x: 0; y: -1 };
-type down = { x: 0; y: 1 };
-type left = { x: -1; y: 0 };
-type right = { x: 1; y: 0 };
+export interface GameUser {
+  id: string;
+  gamePoints: number;
+  body: Array<{
+    x: number;
+    y: number;
+  }>;
+  head: {
+    x: number;
+    y: number;
+  };
+  direction: Direction;
+}
+
+export type Direction = Up | Down | Left | Right;
+
+type Up = { x: 0; y: -1 };
+type Down = { x: 0; y: 1 };
+type Left = { x: -1; y: 0 };
+type Right = { x: 1; y: 0 };
 
 export type MessageListener = (message: Message) => void;

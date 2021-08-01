@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { getCookie, setCookie } from 'utils/cookies';
 import { GameContext, GAME_ROUTES } from './GameContext';
 import {
+  Direction,
   Game,
   HomeRoom,
   LobbyRoom,
@@ -97,6 +98,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
       setCurrentGame(game);
       setCurrentRoute('game');
     });
+    socketConnected.on('game-update', (game: Game) => setCurrentGame(game));
     socketConnected.on('room-user-changed', (room: LobbyRoom) =>
       setCurrentRoom(room)
     );
@@ -150,6 +152,15 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
       }
     },
     [socket]
+  );
+
+  const changeDirection = useCallback(
+    (direction: Direction) => {
+      if (socket && currentGame) {
+        socket.emit('game:change-direction', direction, currentGame.id);
+      }
+    },
+    [currentGame, socket]
   );
 
   const kickPlayer = useCallback(
@@ -217,6 +228,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         updateRoomConfig,
         kickPlayer,
         openSlot,
+        changeDirection,
       }}
     >
       {children}

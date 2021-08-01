@@ -139,7 +139,11 @@ const Chat = ({ onMessage }: ChatProps) => {
         ))}
       </S.MessagesContainer>
       <S.SendMessageForm onSubmit={submitMessage}>
-        <Input name="message" placeholder="New Message..." />
+        <Input
+          onKeyDown={(event) => event.stopPropagation()}
+          name="message"
+          placeholder="New Message..."
+        />
         <button type="submit">
           <S.SendMessageIcon src="/icons/send-message.svg" />
         </button>

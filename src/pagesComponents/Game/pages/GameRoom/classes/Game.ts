@@ -1,3 +1,4 @@
+import { Game as IGame, GameUser } from 'pagesComponents/Game/context/types';
 import { theme } from 'theme';
 
 const colors = {
@@ -20,28 +21,28 @@ export class Game {
 
   constructor(private ctx: CanvasRenderingContext2D, private mapSize: number) {
     this.canvasResize();
-
-    window.addEventListener('resize', () => {
-      this.canvasResize();
-      this.drawGame();
-    });
   }
 
-  drawGame() {
+  drawGame(state: IGame) {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     for (let i = 0; i < this.mapSize; i++) {
       for (let j = 0; j < this.mapSize; j++) {
         this.drawRect(i, j);
       }
     }
 
-    this.drawRect(1, 1, 'body');
-    this.drawRect(1, 2, 'body');
-    this.drawRect(1, 3, 'body');
-    this.drawRect(1, 4, 'body');
-    this.drawRect(2, 4, 'body');
-    this.drawRect(3, 4, 'head');
+    state.users.forEach((user) => {
+      if (this.dead(user)) return;
 
-    this.drawRect(6, 5, 'fruit');
+      user.body.forEach(({ x, y }) => this.drawRect(x, y, 'body'));
+      this.drawRect(user.head.x, user.head.y, 'head');
+    });
+
+    state.fruits.forEach(({ x, y }) => this.drawRect(x, y, 'fruit'));
+  }
+
+  private dead(player: GameUser) {
+    return player.body.length === 0;
   }
 
   canvasResize() {
@@ -58,7 +59,7 @@ export class Game {
     this.radius = this.slotSize * this.relativeRadius;
   }
 
-  drawRect(x: number, y: number, fillColor?: keyof typeof colors) {
+  private drawRect(x: number, y: number, fillColor?: keyof typeof colors) {
     const initialRectX = this.gap + x * this.gap + x * this.slotSize;
     const initialRectY = this.gap + y * this.gap + y * this.slotSize;
 
