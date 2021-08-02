@@ -5,6 +5,8 @@ const colors = {
   body: theme.colors.snakeBody,
   head: theme.colors.primary,
   fruit: theme.colors.danger,
+
+  active: theme.colors.success,
 };
 
 export class Game {
@@ -19,7 +21,11 @@ export class Game {
   private strokeWidth = 0;
   private slotSize = 0;
 
-  constructor(private ctx: CanvasRenderingContext2D, private mapSize: number) {
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private mapSize: number,
+    private currentPlayerId: string
+  ) {
     this.canvasResize();
   }
 
@@ -35,7 +41,11 @@ export class Game {
       if (this.dead(user)) return;
 
       user.body.forEach(({ x, y }) => this.drawRect(x, y, 'body'));
-      this.drawRect(user.head.x, user.head.y, 'head');
+      this.drawRect(
+        user.head.x,
+        user.head.y,
+        user.id === this.currentPlayerId ? 'active' : 'head'
+      );
     });
 
     state.fruits.forEach(({ x, y }) => this.drawRect(x, y, 'fruit'));

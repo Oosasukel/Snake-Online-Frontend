@@ -27,7 +27,7 @@ const GameRoom = () => {
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
-    const game = new Game(ctx, currentGame.mapSize);
+    const game = new Game(ctx, currentGame.mapSize, user.id);
     game.drawGame(currentGame);
     setGame(game);
 
