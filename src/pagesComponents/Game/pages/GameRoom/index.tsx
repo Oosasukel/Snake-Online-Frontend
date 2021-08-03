@@ -3,7 +3,7 @@ import Ranking from 'components/Ranking';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
 import { Direction } from 'pagesComponents/Game/context/types';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Game } from './classes/Game';
 import * as S from './styles';
 
@@ -25,6 +25,10 @@ const GameRoom = () => {
   } = useContext(GameContext);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [game, setGame] = useState<Game>();
+  const currentUsers = useMemo(() => {
+    return currentRoom.users;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
@@ -86,7 +90,7 @@ const GameRoom = () => {
         <Ranking
           myId={user.id}
           users={currentGame.users.map((item) => {
-            const currentUserNickname = currentRoom.users.find(
+            const currentUserNickname = currentUsers.find(
               (userItem) => userItem.id === item.id
             )?.nickname;
 
