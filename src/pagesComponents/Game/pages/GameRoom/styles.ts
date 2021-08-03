@@ -55,6 +55,22 @@ export const Title = styled.div`
   z-index: 1;
 `;
 
+export const ModalTitle = styled.h1`
+  text-align: center;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1.125rem;
+`;
+
+export const ModalSubtitle = styled.h1`
+  text-align: center;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1rem;
+`;
+
 export const SectionGame = styled.section`
   position: relative;
   display: flex;

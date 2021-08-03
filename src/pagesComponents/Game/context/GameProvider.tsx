@@ -225,6 +225,10 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
     [socket]
   );
 
+  const returnToLobby = useCallback(() => {
+    setCurrentRoute('lobby');
+  }, []);
+
   return (
     <GameContext.Provider
       value={{
@@ -235,6 +239,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         createRoom,
         leaveRoom,
         signOut,
+        returnToLobby,
         currentRoute,
         currentRoom,
         currentGame,

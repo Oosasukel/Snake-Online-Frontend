@@ -18,6 +18,7 @@ interface GameContextProps {
   rooms: HomeRoom[];
   playersOnline: number;
   currentRoute: GAME_ROUTES;
+  returnToLobby: () => void;
   messageEmit: (message: string) => void;
   signOut: () => void;
   onNewMessage: (listener: MessageListener) => void;

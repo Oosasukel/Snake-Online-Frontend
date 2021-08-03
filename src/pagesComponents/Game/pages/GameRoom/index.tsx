@@ -1,10 +1,12 @@
 import Background2 from 'components/Background2';
+import Button from 'components/Button';
 import Ranking from 'components/Ranking';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { Direction } from 'pagesComponents/Game/context/types';
+import { Direction, GameUser } from 'pagesComponents/Game/context/types';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Game } from './classes/Game';
+import ModalGameOver from './components/ModalGameOver';
 import * as S from './styles';
 
 const directions: Record<'up' | 'down' | 'left' | 'right', Direction> = {
@@ -20,6 +22,7 @@ const GameRoom = () => {
     ping,
     currentRoom,
     leaveRoom,
+    returnToLobby,
     user,
     changeDirection,
   } = useContext(GameContext);
@@ -29,6 +32,41 @@ const GameRoom = () => {
     return currentRoom.users;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const iAmAlive = useMemo(() => {
+    const me = currentGame.users.find((player) => player.id === user.id);
+
+    if (!me || me.body.length === 0) {
+      return false;
+    }
+
+    return true;
+  }, [currentGame.users, user.id]);
+  const iAmAliveRef = useRef(true);
+  const gameOver = useMemo(() => {
+    const playersAlive: GameUser[] = [];
+
+    currentGame.users.forEach((player) => {
+      if (player.body.length > 0) {
+        playersAlive.push(player);
+      }
+    });
+
+    if (currentGame.users.length > 1 && playersAlive.length < 2) {
+      return {
+        winner: playersAlive.length === 1 ? playersAlive[0] : null,
+      };
+    } else if (currentGame.users.length === 1 && playersAlive.length === 0) {
+      return {
+        winner: null,
+      };
+    }
+
+    return null;
+  }, [currentGame.users]);
+
+  useEffect(() => {
+    iAmAliveRef.current = iAmAlive;
+  }, [iAmAlive]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
@@ -41,6 +79,8 @@ const GameRoom = () => {
     };
 
     const handleChangeDirection = (event: KeyboardEvent) => {
+      if (!iAmAliveRef.current) return;
+
       const events = {
         w: () => changeDirection(directions.up),
         arrowup: () => changeDirection(directions.up),
@@ -76,6 +116,21 @@ const GameRoom = () => {
     <S.Container>
       <Background2 />
       <S.Ping>Ping: {ping}ms</S.Ping>
+
+      <ModalGameOver onClose={returnToLobby} open={!!gameOver}>
+        {!!gameOver && (
+          <>
+            <S.ModalTitle>Game Over</S.ModalTitle>
+
+            <S.ModalSubtitle>
+              {gameOver.winner
+                ? `Winner: ${gameOver.winner} (${gameOver.winner.gamePoints})`
+                : 'No Winner'}
+            </S.ModalSubtitle>
+            <Button onClick={returnToLobby}>Ok</Button>
+          </>
+        )}
+      </ModalGameOver>
 
       <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
       <S.Title>{currentRoom.name}</S.Title>
