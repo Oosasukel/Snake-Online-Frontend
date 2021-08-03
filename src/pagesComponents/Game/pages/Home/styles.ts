@@ -34,6 +34,15 @@ export const ReturnIcon = styled(SVG)`
   }
 `;
 
+export const Ping = styled.span`
+  position: absolute;
+  left: 4rem;
+  top: 1.5rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1rem;
+`;
+
 export const OnlineUsers = styled.div`
   display: flex;
   position: absolute;

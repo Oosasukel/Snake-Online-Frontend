@@ -25,8 +25,10 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   const [rooms, setRooms] = useState<HomeRoom[]>([]);
   const [playersOnline, setPlayersOnline] = useState(0);
   const messageListener = useRef<MessageListener>();
+  const [ping, setPing] = useState(0);
   const [currentRoute, setCurrentRoute] = useState<GAME_ROUTES>('home');
   const router = useRouter();
+  const lastPing = useRef<Date>();
 
   useEffect(() => {
     const access_token = getCookie('@Snake/access_token');
@@ -51,57 +53,72 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
       */
       console.error('error', error);
     });
+    socketConnected.on('connect', () => {
+      setTimeout(() => {
+        lastPing.current = new Date();
+        socketConnected.emit('ping');
+      }, 100);
+      socketConnected.on('pong', () => {
+        setPing(new Date().getTime() - lastPing.current.getTime());
+        setTimeout(() => {
+          lastPing.current = new Date();
+          socketConnected.emit('ping');
+        }, 5000);
+      });
 
-    socketConnected.on('disconnect', (reason) => {
-      console.log('disconnect', reason);
-      socketConnected.disconnect();
-      signOut();
-    });
+      socketConnected.on('disconnect', (reason) => {
+        console.log('disconnect', reason);
+        socketConnected.disconnect();
+        signOut();
+      });
 
-    socketConnected.on('message', (message: Message) => {
-      if (messageListener.current) {
-        messageListener.current(message);
-      }
+      socketConnected.on('message', (message: Message) => {
+        if (messageListener.current) {
+          messageListener.current(message);
+        }
+      });
+      socketConnected.on('rooms-updated', (rooms: HomeRoom[]) =>
+        setRooms(rooms)
+      );
+      socketConnected.on('users-updated', (playersCount) =>
+        setPlayersOnline(playersCount)
+      );
+      socketConnected.on('room-successfuly-created', (room: LobbyRoom) => {
+        setCurrentRoom(room);
+        setCurrentRoute('lobby');
+      });
+      socketConnected.on('joined-room', (room: LobbyRoom) => {
+        setCurrentRoom(room);
+        setCurrentRoute('lobby');
+      });
+      socketConnected.on('user-left-room', (room: LobbyRoom) =>
+        setCurrentRoom(room)
+      );
+      socketConnected.on('new-user-joined-room', (room: LobbyRoom) =>
+        setCurrentRoom(room)
+      );
+      socketConnected.on('room:config-updated', (room: LobbyRoom) =>
+        setCurrentRoom(room)
+      );
+      socketConnected.on('left-room', () => setCurrentRoute('home'));
+      socketConnected.on(
+        'slot-updated',
+        (index: number, newState: 'closed' | 'open') =>
+          setCurrentRoom((previous) => {
+            const roomUpdated = { ...previous };
+            roomUpdated.slots[index] = newState;
+            return roomUpdated;
+          })
+      );
+      socketConnected.on('game-started', (game: Game) => {
+        setCurrentGame(game);
+        setCurrentRoute('game');
+      });
+      socketConnected.on('game-update', (game: Game) => setCurrentGame(game));
+      socketConnected.on('room-user-changed', (room: LobbyRoom) =>
+        setCurrentRoom(room)
+      );
     });
-    socketConnected.on('rooms-updated', (rooms: HomeRoom[]) => setRooms(rooms));
-    socketConnected.on('users-updated', (playersCount) =>
-      setPlayersOnline(playersCount)
-    );
-    socketConnected.on('room-successfuly-created', (room: LobbyRoom) => {
-      setCurrentRoom(room);
-      setCurrentRoute('lobby');
-    });
-    socketConnected.on('joined-room', (room: LobbyRoom) => {
-      setCurrentRoom(room);
-      setCurrentRoute('lobby');
-    });
-    socketConnected.on('user-left-room', (room: LobbyRoom) =>
-      setCurrentRoom(room)
-    );
-    socketConnected.on('new-user-joined-room', (room: LobbyRoom) =>
-      setCurrentRoom(room)
-    );
-    socketConnected.on('room:config-updated', (room: LobbyRoom) =>
-      setCurrentRoom(room)
-    );
-    socketConnected.on('left-room', () => setCurrentRoute('home'));
-    socketConnected.on(
-      'slot-updated',
-      (index: number, newState: 'closed' | 'open') =>
-        setCurrentRoom((previous) => {
-          const roomUpdated = { ...previous };
-          roomUpdated.slots[index] = newState;
-          return roomUpdated;
-        })
-    );
-    socketConnected.on('game-started', (game: Game) => {
-      setCurrentGame(game);
-      setCurrentRoute('game');
-    });
-    socketConnected.on('game-update', (game: Game) => setCurrentGame(game));
-    socketConnected.on('room-user-changed', (room: LobbyRoom) =>
-      setCurrentRoom(room)
-    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -211,6 +228,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   return (
     <GameContext.Provider
       value={{
+        ping,
         messageEmit,
         onNewMessage,
         joinRoom,

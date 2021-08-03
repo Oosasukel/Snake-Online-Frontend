@@ -15,6 +15,7 @@ export class Game {
   private relativeGap = 0.16;
   private relativeStrokeWidth = 0.02;
   private relativeRadius = 0.095;
+  private currentState: IGame;
 
   private radius = 0;
   private gap = 0;
@@ -24,12 +25,16 @@ export class Game {
   constructor(
     private ctx: CanvasRenderingContext2D,
     private mapSize: number,
-    private currentPlayerId: string
+    private currentPlayerId: string,
+    initialState: IGame
   ) {
+    this.currentState = initialState;
     this.canvasResize();
   }
 
   drawGame(state: IGame) {
+    this.currentState = state;
+
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     for (let i = 0; i < this.mapSize; i++) {
       for (let j = 0; j < this.mapSize; j++) {
@@ -67,6 +72,8 @@ export class Game {
     this.strokeWidth = (canvasSize / this.mapSize) * this.relativeStrokeWidth;
     this.slotSize = (canvasSize - this.gap * (this.mapSize + 1)) / this.mapSize;
     this.radius = this.slotSize * this.relativeRadius;
+
+    this.drawGame(this.currentState);
   }
 
   private drawRect(x: number, y: number, fillColor?: keyof typeof colors) {

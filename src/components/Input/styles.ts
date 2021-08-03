@@ -9,6 +9,10 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
 
+  &:disabled {
+    opacity: 0.5;
+  }
+
   span {
     font-size: 0.75rem;
     color: ${({ theme, error }) =>

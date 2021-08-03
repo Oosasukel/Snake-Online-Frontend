@@ -16,6 +16,7 @@ const Home = () => {
     rooms,
     playersOnline,
     createRoom,
+    ping,
     signOut,
   } = useContext(GameContext);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
@@ -31,6 +32,7 @@ const Home = () => {
         onClose={() => setModalCreateOpen(false)}
         onCreate={(roomName) => createRoom(roomName)}
       />
+      <S.Ping>Ping: {ping}ms</S.Ping>
       <S.ReturnIcon onClick={() => signOut()} src="/icons/return.svg" />
 
       <S.OnlineUsers>

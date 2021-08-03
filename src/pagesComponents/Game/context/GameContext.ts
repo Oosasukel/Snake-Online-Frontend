@@ -12,6 +12,7 @@ export type GAME_ROUTES = 'lobby' | 'home' | 'game';
 
 interface GameContextProps {
   user: User;
+  ping: number;
   currentRoom?: LobbyRoom;
   currentGame?: Game;
   rooms: HomeRoom[];

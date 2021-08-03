@@ -15,6 +15,15 @@ export const Container = styled.div`
   gap: 1rem;
 `;
 
+export const Ping = styled.span`
+  position: absolute;
+  left: 4rem;
+  top: 1.5rem;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1rem;
+`;
+
 export const ReturnIcon = styled(SVG)`
   position: absolute;
   cursor: pointer;

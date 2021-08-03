@@ -31,6 +31,7 @@ const Lobby = () => {
     leaveRoom,
     closeSlot,
     openSlot,
+    ping,
     updateReady,
     kickPlayer,
     updateRoomConfig,
@@ -87,6 +88,7 @@ const Lobby = () => {
   return (
     <S.Container>
       <Background1 />
+      <S.Ping>Ping: {ping}ms</S.Ping>
 
       <S.SectionChat>
         <S.TitleContainer>

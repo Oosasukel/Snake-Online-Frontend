@@ -17,6 +17,7 @@ const directions: Record<'up' | 'down' | 'left' | 'right', Direction> = {
 const GameRoom = () => {
   const {
     currentGame,
+    ping,
     currentRoom,
     leaveRoom,
     user,
@@ -27,7 +28,7 @@ const GameRoom = () => {
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
-    const game = new Game(ctx, currentGame.mapSize, user.id);
+    const game = new Game(ctx, currentGame.mapSize, user.id, currentGame);
     game.drawGame(currentGame);
     setGame(game);
 
@@ -36,40 +37,19 @@ const GameRoom = () => {
     };
 
     const handleChangeDirection = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'w': {
-          changeDirection(directions.up);
-          break;
-        }
-        case 'ArrowUp': {
-          changeDirection(directions.up);
-          break;
-        }
-        case 's': {
-          changeDirection(directions.down);
-          break;
-        }
-        case 'ArrowDown': {
-          changeDirection(directions.down);
-          break;
-        }
-        case 'a': {
-          changeDirection(directions.left);
-          break;
-        }
-        case 'ArrowLeft': {
-          changeDirection(directions.left);
-          break;
-        }
-        case 'd': {
-          changeDirection(directions.right);
-          break;
-        }
-        case 'ArrowRight': {
-          changeDirection(directions.right);
-          break;
-        }
-      }
+      const events = {
+        w: () => changeDirection(directions.up),
+        arrowup: () => changeDirection(directions.up),
+        s: () => changeDirection(directions.down),
+        arrowdown: () => changeDirection(directions.down),
+        a: () => changeDirection(directions.left),
+        arrowleft: () => changeDirection(directions.left),
+        d: () => changeDirection(directions.right),
+        arrowright: () => changeDirection(directions.right),
+      };
+
+      const eventToTrigger = events[event.key.toLowerCase()];
+      if (eventToTrigger) eventToTrigger();
     };
 
     window.addEventListener('resize', resizeGame);
@@ -91,6 +71,7 @@ const GameRoom = () => {
   return (
     <S.Container>
       <Background2 />
+      <S.Ping>Ping: {ping}ms</S.Ping>
 
       <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
       <S.Title>{currentRoom.name}</S.Title>

@@ -13,7 +13,7 @@ export const CustomButton = styled.button<CustomButtonProps>`
   border-radius: 0.75rem;
 
   &:disabled {
-    background-color: red;
+    opacity: 0.5;
   }
 
   ${({ fullWidth }) => {
