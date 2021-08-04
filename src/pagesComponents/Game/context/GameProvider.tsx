@@ -4,7 +4,6 @@ import { io, Socket } from 'socket.io-client';
 import { getCookie, setCookie } from 'utils/cookies';
 import { GameContext, GAME_ROUTES } from './GameContext';
 import {
-  Direction,
   Game,
   HomeRoom,
   LobbyRoom,
@@ -172,7 +171,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   );
 
   const changeDirection = useCallback(
-    (direction: Direction) => {
+    (direction: number) => {
       if (socket && currentGame) {
         socket.emit('game:change-direction', direction, currentGame.id);
       }

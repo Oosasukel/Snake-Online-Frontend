@@ -66,14 +66,13 @@ export interface GameUser {
     x: number;
     y: number;
   };
-  direction: Direction;
 }
 
-export type Direction = Up | Down | Left | Right;
-
-type Up = { x: 0; y: -1 };
-type Down = { x: 0; y: 1 };
-type Left = { x: -1; y: 0 };
-type Right = { x: 1; y: 0 };
+export const directions = {
+  up: 1,
+  right: 2,
+  down: 3,
+  left: 4,
+};
 
 export type MessageListener = (message: Message) => void;

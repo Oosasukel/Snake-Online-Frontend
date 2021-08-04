@@ -3,18 +3,11 @@ import Button from 'components/Button';
 import Ranking from 'components/Ranking';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { Direction, GameUser } from 'pagesComponents/Game/context/types';
+import { directions, GameUser } from 'pagesComponents/Game/context/types';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Game } from './classes/Game';
 import ModalGameOver from './components/ModalGameOver';
 import * as S from './styles';
-
-const directions: Record<'up' | 'down' | 'left' | 'right', Direction> = {
-  up: { x: 0, y: -1 },
-  down: { x: 0, y: 1 },
-  left: { x: -1, y: 0 },
-  right: { x: 1, y: 0 },
-};
 
 const GameRoom = () => {
   const {
@@ -52,9 +45,25 @@ const GameRoom = () => {
     });
 
     if (currentGame.users.length > 1 && playersAlive.length < 2) {
-      return {
-        winner: playersAlive.length === 1 ? playersAlive[0] : null,
-      };
+      if (playersAlive.length === 1) {
+        const playerAlive = playersAlive[0];
+        const winner = currentUsers.find(
+          (player) => player.id === playerAlive.id
+        );
+
+        return {
+          winner: winner
+            ? {
+                nickname: winner.nickname,
+                gamePoints: playerAlive.gamePoints,
+              }
+            : null,
+        };
+      } else {
+        return {
+          winner: null,
+        };
+      }
     } else if (currentGame.users.length === 1 && playersAlive.length === 0) {
       return {
         winner: null,
@@ -62,7 +71,7 @@ const GameRoom = () => {
     }
 
     return null;
-  }, [currentGame.users]);
+  }, [currentGame.users, currentUsers]);
 
   useEffect(() => {
     iAmAliveRef.current = iAmAlive;
@@ -124,7 +133,7 @@ const GameRoom = () => {
 
             <S.ModalSubtitle>
               {gameOver.winner
-                ? `Winner: ${gameOver.winner} (${gameOver.winner.gamePoints})`
+                ? `Winner: ${gameOver.winner.nickname} (+${gameOver.winner.gamePoints} points)`
                 : 'No Winner'}
             </S.ModalSubtitle>
             <Button onClick={returnToLobby}>Ok</Button>
