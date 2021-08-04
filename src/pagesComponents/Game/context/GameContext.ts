@@ -1,12 +1,5 @@
 import { createContext } from 'react';
-import {
-  Direction,
-  Game,
-  HomeRoom,
-  LobbyRoom,
-  MessageListener,
-  User,
-} from './types';
+import { Game, HomeRoom, LobbyRoom, MessageListener, User } from './types';
 
 export type GAME_ROUTES = 'lobby' | 'home' | 'game';
 
@@ -30,7 +23,7 @@ interface GameContextProps {
   openSlot: (index: number) => void;
   closeSlot: (index: number) => void;
   updateReady: (ready: boolean) => void;
-  changeDirection: (direction: Direction) => void;
+  changeDirection: (direction: number) => void;
 }
 
 export const GameContext = createContext({} as GameContextProps);
