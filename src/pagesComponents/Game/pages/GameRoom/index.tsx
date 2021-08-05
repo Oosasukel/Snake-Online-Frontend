@@ -74,6 +74,95 @@ const GameRoom = () => {
   }, [currentGame.users, currentUsers]);
 
   useEffect(() => {
+    let lastDirection: 'left' | 'right' | 'bottom' | 'top';
+    const lastTouch = { x: 0, y: 0 };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      const currentTouch = event.touches[0];
+      lastTouch.x = currentTouch.screenX;
+      lastTouch.y = currentTouch.screenY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const currentTouch = event.touches[0];
+      const offset = {
+        x: currentTouch.screenX - lastTouch.x,
+        y: -(currentTouch.screenY - lastTouch.y),
+      };
+
+      if (Math.abs(offset.x) < 50 && Math.abs(offset.y) < 50) return;
+
+      lastTouch.x = currentTouch.screenX;
+      lastTouch.y = currentTouch.screenY;
+
+      console.log(offset);
+
+      const angle = Math.atan2(offset.y, offset.x);
+      const degrees = (180 * angle) / Math.PI;
+      const roundedDegrees = (360 + Math.round(degrees)) % 360;
+      const angleDirection = Math.round(roundedDegrees / 90);
+
+      console.log('angleDirection', angleDirection);
+      console.log('lastDirection', lastDirection);
+
+      let currentDirection = lastDirection;
+      switch (angleDirection) {
+        case 0: {
+          currentDirection = 'right';
+          break;
+        }
+        case 1: {
+          currentDirection = 'top';
+          break;
+        }
+        case 2: {
+          currentDirection = 'left';
+          break;
+        }
+        case 3: {
+          currentDirection = 'bottom';
+          break;
+        }
+        case 4: {
+          currentDirection = 'right';
+          break;
+        }
+      }
+
+      if (currentDirection !== lastDirection) {
+        lastDirection = currentDirection;
+        switch (currentDirection) {
+          case 'top': {
+            changeDirection(1);
+            break;
+          }
+          case 'right': {
+            changeDirection(2);
+            break;
+          }
+          case 'bottom': {
+            changeDirection(3);
+            break;
+          }
+          case 'left': {
+            changeDirection(4);
+            break;
+          }
+        }
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     iAmAliveRef.current = iAmAlive;
   }, [iAmAlive]);
 
