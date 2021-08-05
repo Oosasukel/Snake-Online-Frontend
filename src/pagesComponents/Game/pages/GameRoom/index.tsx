@@ -133,7 +133,9 @@ const GameRoom = () => {
 
             <S.ModalSubtitle>
               {gameOver.winner
-                ? `Winner: ${gameOver.winner.nickname} (+${gameOver.winner.gamePoints} points)`
+                ? `Winner: ${gameOver.winner.nickname} (+${
+                    gameOver.winner.gamePoints + currentGame.fruits.length
+                  } points)`
                 : 'No Winner'}
             </S.ModalSubtitle>
             <Button onClick={returnToLobby}>Ok</Button>

@@ -77,6 +77,8 @@ export const SendMessageForm = styled(Form)`
 export const SendMessageIcon = styled(SVG)`
   min-height: 1.5rem;
   min-width: 1.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
 
   path {
     fill: ${({ theme }) => theme.colors.border};

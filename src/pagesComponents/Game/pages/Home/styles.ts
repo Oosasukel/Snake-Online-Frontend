@@ -19,6 +19,8 @@ export const ReturnIcon = styled(SVG)`
   left: 4rem;
   min-width: 2rem;
   min-height: 2rem;
+  width: 2rem;
+  height: 2rem;
   z-index: 2;
 
   path {
@@ -61,6 +63,8 @@ export const OnlineUsers = styled.div`
 export const UsersIcon = styled(SVG)`
   min-width: 2rem;
   min-height: 2rem;
+  width: 2rem;
+  height: 2rem;
   margin-right: 0.5rem;
 
   path {
@@ -203,6 +207,8 @@ export const RoomsOptions = styled.div`
 export const SearchIcon = styled(SVG)`
   min-height: 1.5rem;
   min-width: 1.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
   margin-left: 0.5rem;
 
   path {

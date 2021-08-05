@@ -1,5 +1,9 @@
 import { Game as IGame, GameUser } from 'pagesComponents/Game/context/types';
 import { theme } from 'theme';
+import { Sound } from 'utils/Sound';
+
+const pickFruitSong = new Sound('/sounds/beads.wav');
+const gameOverSound = new Sound('/sounds/game_over.ogg');
 
 const colors = {
   body: theme.colors.snakeBody,
@@ -32,8 +36,57 @@ export class Game {
     this.canvasResize();
   }
 
+  private gameOver(): boolean {
+    const playersAlive: GameUser[] = [];
+
+    this.currentState.users.forEach((player) => {
+      if (player.body.length > 0) {
+        playersAlive.push(player);
+      }
+    });
+
+    if (
+      (this.currentState.users.length > 1 && playersAlive.length < 2) ||
+      (this.currentState.users.length === 1 && playersAlive.length === 0)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private someFruitWasCollected(previousState: IGame, newState: IGame) {
+    for (let i = 0; i < previousState.fruits.length; i++) {
+      const previousFruit = previousState.fruits[i];
+
+      let thisFruitExists = false;
+      for (let j = 0; j < newState.fruits.length; j++) {
+        const currentNewFruit = newState.fruits[j];
+
+        if (
+          previousFruit.x === currentNewFruit.x &&
+          previousFruit.y === currentNewFruit.y
+        ) {
+          thisFruitExists = true;
+        }
+      }
+
+      if (!thisFruitExists) return true;
+    }
+
+    return false;
+  }
+
   drawGame(state: IGame) {
+    if (this.someFruitWasCollected(this.currentState, state)) {
+      pickFruitSong.play();
+    }
+
     this.currentState = state;
+
+    if (this.gameOver()) {
+      gameOverSound.play();
+    }
 
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     for (let i = 0; i < this.mapSize; i++) {

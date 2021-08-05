@@ -65,6 +65,18 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html {
+    @media (min-width: 640px) and (min-height: 360px){
+      font-size: 9px;
+    }
+    @media (min-width: 640px) and (min-height: 480px){
+      font-size: 11px;
+    }
+    @media (min-width: 960px) and (min-height: 540px){
+      font-size: 12px;
+    }
+    @media (min-width: 1024px) and (min-height: 768px){
+      font-size: 16px;
+    }
     @media (min-width: 1600px) and (min-height: 900px){
       font-size: 20px;
     }

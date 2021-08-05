@@ -31,6 +31,8 @@ export const ReturnIcon = styled(SVG)`
   left: 4rem;
   min-width: 2rem;
   min-height: 2rem;
+  width: 2rem;
+  height: 2rem;
   z-index: 2;
 
   path {

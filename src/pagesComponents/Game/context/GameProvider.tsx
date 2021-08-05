@@ -62,7 +62,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         setTimeout(() => {
           lastPing.current = new Date();
           socketConnected.emit('ping');
-        }, 5000);
+        }, 1000);
       });
 
       socketConnected.on('disconnect', (reason) => {

@@ -17,7 +17,7 @@ import {
 import PlayerSlot, { PlayerSlotRef } from './PlayerSlot';
 import * as S from './styles';
 
-const MIN_MAP_SIZE = 12;
+const MIN_MAP_SIZE = 4;
 const MAX_MAP_SIZE = 40;
 
 interface ConfigFormData {

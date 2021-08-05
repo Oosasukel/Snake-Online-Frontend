@@ -78,6 +78,8 @@ export const OwnerIcon = styled(SVG)`
   margin-left: 1rem;
   min-height: 2rem;
   min-width: 2rem;
+  height: 2rem;
+  width: 2rem;
 
   path {
     fill: ${({ theme }) => theme.colors.warn};
@@ -94,6 +96,8 @@ export const CloseIcon = styled(SVG)`
   margin-right: 1rem;
   min-height: 1.5rem;
   min-width: 1.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
 
   path {
     fill: ${({ theme }) => theme.colors.danger};
@@ -109,6 +113,8 @@ export const CheckIcon = styled(SVG)`
   margin-right: 1rem;
   min-height: 2rem;
   min-width: 2rem;
+  height: 2rem;
+  width: 2rem;
 
   path {
     fill: ${({ theme }) => theme.colors.success};
@@ -140,6 +146,8 @@ export const SlotClosedIcon = styled(SVG)`
   z-index: 1;
   min-height: 4.5rem;
   min-width: 4.5rem;
+  height: 4.5rem;
+  width: 4.5rem;
   opacity: 0.2;
 
   path {
@@ -170,6 +178,8 @@ export const MessageTail = styled(SVG)`
   z-index: 1;
   min-height: 2rem;
   min-width: 2rem;
+  height: 2rem;
+  width: 2rem;
 
   path {
     fill: ${({ theme }) => theme.colors.balloonBackground};
