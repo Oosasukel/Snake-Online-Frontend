@@ -1,9 +1,11 @@
+import { Keys } from './types';
+
 interface SetCookieOptions {
   expires?: Date;
 }
 
 export const setCookie = (
-  key: string,
+  key: Keys,
   value: string,
   options?: SetCookieOptions
 ) => {

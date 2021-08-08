@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getCookie, setCookie } from 'utils/cookies';
+import { NEVER } from 'utils/cookies/types';
 import { GameContext, GAME_ROUTES } from './GameContext';
 import {
   Game,
@@ -17,8 +18,12 @@ interface GameProviderProps {
   children: ReactNode;
 }
 
-export const GameProvider = ({ children, user }: GameProviderProps) => {
+export const GameProvider = ({
+  children,
+  user: userProp,
+}: GameProviderProps) => {
   const [socket, setSocket] = useState<Socket>();
+  const [user, setUser] = useState<User>(userProp);
   const [currentRoom, setCurrentRoom] = useState<LobbyRoom>();
   const [currentGame, setCurrentGame] = useState<Game>();
   const [rooms, setRooms] = useState<HomeRoom[]>([]);
@@ -26,6 +31,7 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   const messageListener = useRef<MessageListener>();
   const [ping, setPing] = useState(0);
   const [currentRoute, setCurrentRoute] = useState<GAME_ROUTES>('home');
+  const [rankingPosition, setRankingPosition] = useState();
   const router = useRouter();
   const lastPing = useRef<Date>();
 
@@ -75,6 +81,9 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
         if (messageListener.current) {
           messageListener.current(message);
         }
+      });
+      socketConnected.on('ranking:position', (rank) => {
+        setRankingPosition(rank);
       });
       socketConnected.on('rooms-updated', (rooms: HomeRoom[]) =>
         setRooms(rooms)
@@ -141,6 +150,13 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
     },
     [socket]
   );
+
+  const incrementUserPoints = useCallback((points: number) => {
+    setUser((previous) => ({ ...previous, points: previous.points + points }));
+    const userCookie = JSON.parse(getCookie('@Snake/user'));
+    userCookie.points += points;
+    setCookie('@Snake/user', JSON.stringify(userCookie), { expires: NEVER });
+  }, []);
 
   const onNewMessage = useCallback((listener: MessageListener) => {
     messageListener.current = listener;
@@ -231,7 +247,9 @@ export const GameProvider = ({ children, user }: GameProviderProps) => {
   return (
     <GameContext.Provider
       value={{
+        rankingPosition,
         ping,
+        incrementUserPoints,
         messageEmit,
         onNewMessage,
         joinRoom,

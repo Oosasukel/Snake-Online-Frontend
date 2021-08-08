@@ -13,6 +13,7 @@ const Home = () => {
   const {
     joinRoom,
     user,
+    rankingPosition,
     rooms,
     playersOnline,
     createRoom,
@@ -42,8 +43,26 @@ const Home = () => {
 
       <S.SectionPlayer>
         <S.PlayerInfo>
-          <span>{user.nickname}</span>
-          <SnakeAvatar />
+          <S.PlayerNickname>{user.nickname}</S.PlayerNickname>
+          <S.PlayerAvatarContainer>
+            <SnakeAvatar />
+            <S.PlayerStatus>
+              <S.Status>
+                <S.StatusIcon src="/icons/apple.svg" />
+                <S.StatusLabel>{user.points}</S.StatusLabel>
+              </S.Status>
+              <S.Status
+                onClick={() => {
+                  console.log('ranking');
+                }}
+              >
+                <S.StatusIcon src="/icons/trophy.svg" />
+                <S.StatusLabel>
+                  {rankingPosition ? `${rankingPosition}º` : '--'}
+                </S.StatusLabel>
+              </S.Status>
+            </S.PlayerStatus>
+          </S.PlayerAvatarContainer>
         </S.PlayerInfo>
         <Chat />
       </S.SectionPlayer>

@@ -13,6 +13,7 @@ const GameRoom = () => {
   const {
     currentGame,
     ping,
+    incrementUserPoints,
     currentRoom,
     leaveRoom,
     returnToLobby,
@@ -25,16 +26,15 @@ const GameRoom = () => {
     return currentRoom.users;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const iAmAliveRef = useRef(true);
   const iAmAlive = useMemo(() => {
-    const me = currentGame.users.find((player) => player.id === user.id);
+    if (!iAmAliveRef.current) return false;
 
-    if (!me || me.body.length === 0) {
-      return false;
-    }
+    const me = currentGame.users.find((player) => player.id === user.id);
+    if (!me || me.body.length === 0) return false;
 
     return true;
   }, [currentGame.users, user.id]);
-  const iAmAliveRef = useRef(true);
   const gameOver = useMemo(() => {
     const playersAlive: GameUser[] = [];
 
@@ -54,8 +54,9 @@ const GameRoom = () => {
         return {
           winner: winner
             ? {
+                id: winner.id,
                 nickname: winner.nickname,
-                gamePoints: playerAlive.gamePoints,
+                gamePoints: playerAlive.gamePoints + currentGame.fruits.length,
               }
             : null,
         };
@@ -71,7 +72,36 @@ const GameRoom = () => {
     }
 
     return null;
-  }, [currentGame.users, currentUsers]);
+  }, [currentGame.fruits.length, currentGame.users, currentUsers]);
+  const ranking = useMemo(() => {
+    return currentGame.users
+      .map((item) => {
+        const currentUserNickname = currentUsers.find(
+          (userItem) => userItem.id === item.id
+        )?.nickname;
+
+        let points = item.gamePoints;
+
+        if (gameOver && gameOver.winner) {
+          const { winner } = gameOver;
+
+          if (winner.id === item.id) {
+            points += currentGame.fruits.length;
+          }
+        }
+
+        return {
+          id: item.id,
+          name: currentUserNickname,
+          points,
+        };
+      })
+      .sort((a, b) => {
+        if (a.points < b.points) return 1;
+        else if (a.points === b.points) return 0;
+        else return -1;
+      });
+  }, [currentGame.fruits.length, currentGame.users, currentUsers, gameOver]);
 
   useEffect(() => {
     let lastDirection: 'left' | 'right' | 'bottom' | 'top';
@@ -163,8 +193,24 @@ const GameRoom = () => {
   }, []);
 
   useEffect(() => {
+    if (!iAmAlive && iAmAliveRef.current) {
+      const me = ranking.find((r) => r.id === user.id);
+      if (me) {
+        incrementUserPoints(me.points);
+      }
+    }
+
     iAmAliveRef.current = iAmAlive;
-  }, [iAmAlive]);
+  }, [iAmAlive, incrementUserPoints, ranking, user.id]);
+
+  useEffect(() => {
+    if (gameOver && gameOver.winner) {
+      const { winner } = gameOver;
+      if (user.id === winner.id) {
+        incrementUserPoints(winner.gamePoints);
+      }
+    }
+  }, [gameOver, incrementUserPoints, user.id]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
@@ -222,9 +268,7 @@ const GameRoom = () => {
 
             <S.ModalSubtitle>
               {gameOver.winner
-                ? `Winner: ${gameOver.winner.nickname} (+${
-                    gameOver.winner.gamePoints + currentGame.fruits.length
-                  } points)`
+                ? `Winner: ${gameOver.winner.nickname} (+${gameOver.winner.gamePoints} points)`
                 : 'No Winner'}
             </S.ModalSubtitle>
             <Button onClick={returnToLobby}>Ok</Button>
@@ -242,20 +286,7 @@ const GameRoom = () => {
       </S.SectionGame>
 
       <S.SectionRanking>
-        <Ranking
-          myId={user.id}
-          users={currentGame.users.map((item) => {
-            const currentUserNickname = currentUsers.find(
-              (userItem) => userItem.id === item.id
-            )?.nickname;
-
-            return {
-              id: item.id,
-              name: currentUserNickname,
-              points: item.gamePoints,
-            };
-          })}
-        />
+        <Ranking myId={user.id} users={ranking} />
 
         <div />
       </S.SectionRanking>

@@ -88,14 +88,70 @@ export const PlayerInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
 
-  span {
-    color: ${({ theme }) => theme.colors.textPrimary};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-    font-size: 1.125rem;
-    text-align: center;
-    margin-bottom: 1rem;
+export const PlayerNickname = styled.span`
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1.125rem;
+  text-align: center;
+  margin-bottom: 1rem;
+`;
+
+export const PlayerAvatarContainer = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+`;
+
+export const PlayerStatus = styled.span`
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  & *:last-child {
+    margin-bottom: 0;
   }
+`;
+
+export const StatusIcon = styled(SVG)`
+  min-width: 2rem;
+  width: 2rem;
+  min-height: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+`;
+
+export const Status = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  ${({ onClick }) => {
+    if (onClick) {
+      return css`
+        cursor: pointer;
+
+        &:hover {
+          ${StatusIcon} {
+            filter: brightness(1.1);
+          }
+        }
+        &:active {
+          ${StatusIcon} {
+            filter: brightness(1.2);
+          }
+        }
+      `;
+    }
+  }}
+`;
+
+export const StatusLabel = styled.span`
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: 1rem;
 `;
 
 export const SectionRooms = styled.section`
