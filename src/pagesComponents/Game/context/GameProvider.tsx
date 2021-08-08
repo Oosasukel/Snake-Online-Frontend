@@ -10,6 +10,7 @@ import {
   LobbyRoom,
   Message,
   MessageListener,
+  Ranking,
   User,
 } from './types';
 
@@ -33,7 +34,12 @@ export const GameProvider = ({
   const [currentRoute, setCurrentRoute] = useState<GAME_ROUTES>('home');
   const [rankingPosition, setRankingPosition] = useState();
   const router = useRouter();
+  const [ranking, setRanking] = useState<Ranking[]>([]);
   const lastPing = useRef<Date>();
+
+  useEffect(() => {
+    console.log(ranking);
+  }, [ranking]);
 
   useEffect(() => {
     const access_token = getCookie('@Snake/access_token');
@@ -82,9 +88,10 @@ export const GameProvider = ({
           messageListener.current(message);
         }
       });
-      socketConnected.on('ranking:position', (rank) => {
-        setRankingPosition(rank);
-      });
+      socketConnected.on('ranking:top', (topRanking) => setRanking(topRanking));
+      socketConnected.on('ranking:position', (rank) =>
+        setRankingPosition(rank)
+      );
       socketConnected.on('rooms-updated', (rooms: HomeRoom[]) =>
         setRooms(rooms)
       );
@@ -177,6 +184,12 @@ export const GameProvider = ({
     }
   }, [socket]);
 
+  const requestRanking = useCallback(() => {
+    if (socket) {
+      socket.emit('ranking:top');
+    }
+  }, [socket]);
+
   const createRoom = useCallback(
     (name: string) => {
       if (socket) {
@@ -248,6 +261,7 @@ export const GameProvider = ({
     <GameContext.Provider
       value={{
         rankingPosition,
+        ranking,
         ping,
         incrementUserPoints,
         messageEmit,
@@ -255,6 +269,7 @@ export const GameProvider = ({
         joinRoom,
         createRoom,
         leaveRoom,
+        requestRanking,
         signOut,
         returnToLobby,
         currentRoute,

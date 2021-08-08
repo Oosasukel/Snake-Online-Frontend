@@ -1,5 +1,12 @@
 import { createContext } from 'react';
-import { Game, HomeRoom, LobbyRoom, MessageListener, User } from './types';
+import {
+  Game,
+  HomeRoom,
+  LobbyRoom,
+  MessageListener,
+  Ranking,
+  User,
+} from './types';
 
 export type GAME_ROUTES = 'lobby' | 'home' | 'game';
 
@@ -7,11 +14,13 @@ interface GameContextProps {
   user: User;
   ping: number;
   currentRoom?: LobbyRoom;
+  ranking: Ranking[];
   currentGame?: Game;
   rooms: HomeRoom[];
   playersOnline: number;
   currentRoute: GAME_ROUTES;
   rankingPosition?: number;
+  requestRanking: () => void;
   incrementUserPoints: (points: number) => void;
   returnToLobby: () => void;
   messageEmit: (message: string) => void;

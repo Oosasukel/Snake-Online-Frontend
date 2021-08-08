@@ -68,6 +68,13 @@ export interface GameUser {
   };
 }
 
+export interface Ranking {
+  id: string;
+  nickname: string;
+  points: number;
+  position: number;
+}
+
 export const directions = {
   up: 1,
   right: 2,

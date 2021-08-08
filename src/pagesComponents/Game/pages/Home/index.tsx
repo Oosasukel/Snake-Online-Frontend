@@ -6,7 +6,8 @@ import SnakeAvatar from 'components/SnakeAvatar';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
 import { useCallback, useContext, useState } from 'react';
-import ModalNewRoom from './ModalNewRoom';
+import ModalNewRoom from './components/ModalNewRoom';
+import ModalRanking from './components/ModalRanking';
 import * as S from './styles';
 
 const Home = () => {
@@ -15,15 +16,24 @@ const Home = () => {
     user,
     rankingPosition,
     rooms,
+    ranking,
     playersOnline,
     createRoom,
+    requestRanking,
     ping,
     signOut,
   } = useContext(GameContext);
+  const [rankingOpen, setRankingOpen] = useState(false);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
+  /** @TODO inplementar busca */
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const searchRoom = useCallback(() => {}, []);
+
+  const handleRequestRanking = useCallback(() => {
+    requestRanking();
+    setRankingOpen(true);
+  }, [requestRanking]);
 
   return (
     <S.Container>
@@ -32,6 +42,12 @@ const Home = () => {
         open={modalCreateOpen}
         onClose={() => setModalCreateOpen(false)}
         onCreate={(roomName) => createRoom(roomName)}
+      />
+      <ModalRanking
+        userId={user.id}
+        ranking={ranking}
+        onClose={() => setRankingOpen(false)}
+        open={rankingOpen}
       />
       <S.Ping>Ping: {ping}ms</S.Ping>
       <S.ReturnIcon onClick={() => signOut()} src="/icons/return.svg" />
@@ -51,11 +67,7 @@ const Home = () => {
                 <S.StatusIcon src="/icons/apple.svg" />
                 <S.StatusLabel>{user.points}</S.StatusLabel>
               </S.Status>
-              <S.Status
-                onClick={() => {
-                  console.log('ranking');
-                }}
-              >
+              <S.Status onClick={handleRequestRanking}>
                 <S.StatusIcon src="/icons/trophy.svg" />
                 <S.StatusLabel>
                   {rankingPosition ? `${rankingPosition}º` : '--'}

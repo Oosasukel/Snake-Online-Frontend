@@ -1,6 +1,7 @@
 import { FormHandles } from '@unform/core';
 import Button from 'components/Button';
 import Input from 'components/Input';
+import Modal from 'components/Modal';
 import { useCallback, useRef } from 'react';
 import * as S from './styles';
 
@@ -36,7 +37,7 @@ const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
   if (!open) return null;
 
   return (
-    <S.Overlay onClick={onClose}>
+    <Modal onClose={onClose} open={open}>
       <S.Form
         ref={formRef}
         onClick={(event) => event.stopPropagation()}
@@ -55,7 +56,7 @@ const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
           <Button type="submit">Create</Button>
         </S.Buttons>
       </S.Form>
-    </S.Overlay>
+    </Modal>
   );
 };
 
