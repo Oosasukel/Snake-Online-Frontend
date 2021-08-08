@@ -38,10 +38,6 @@ export const GameProvider = ({
   const lastPing = useRef<Date>();
 
   useEffect(() => {
-    console.log(ranking);
-  }, [ranking]);
-
-  useEffect(() => {
     const access_token = getCookie('@Snake/access_token');
     console.log('access_token', access_token);
 
