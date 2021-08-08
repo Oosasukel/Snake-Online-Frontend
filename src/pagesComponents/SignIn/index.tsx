@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useRef, useState } from 'react';
 import { setCookie } from 'utils/cookies';
+import { NEVER } from 'utils/cookies/types';
 import * as yup from 'yup';
 import * as S from './styles';
 
@@ -68,7 +69,7 @@ const SignIn = () => {
           expires: new Date(refreshExp * 1000),
         });
         setCookie('@Snake/user', JSON.stringify(user), {
-          expires: new Date(4107369600000),
+          expires: NEVER,
         });
 
         router.push('/');
