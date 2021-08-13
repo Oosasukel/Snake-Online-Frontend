@@ -39,7 +39,6 @@ export const GameProvider = ({
 
   useEffect(() => {
     const access_token = getCookie('@Snake/access_token');
-    console.log('access_token', access_token);
 
     const socketConnected = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
       query: { token: access_token },
