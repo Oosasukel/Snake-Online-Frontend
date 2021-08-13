@@ -38,12 +38,6 @@ export default class MyDocument extends Document<MyDocumentProps> {
         <Head>
           <link rel="shortcut icon" href="favicon.png" type="image/png" />
 
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2341175168006454"
-            crossOrigin="anonymous"
-          />
-
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
