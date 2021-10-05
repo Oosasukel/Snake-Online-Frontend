@@ -1,4 +1,4 @@
-import { Game as IGame, GameUser } from 'pagesComponents/Game/context/types';
+import { GameState, Player } from 'pagesComponents/Game/context/schema';
 import { theme } from 'theme';
 import { Sound } from 'utils/Sound';
 
@@ -19,7 +19,7 @@ export class Game {
   private relativeGap = 0.16;
   private relativeStrokeWidth = 0.02;
   private relativeRadius = 0.095;
-  private currentState: IGame;
+  private currentState: GameState;
 
   private radius = 0;
   private gap = 0;
@@ -32,24 +32,24 @@ export class Game {
     private ctx: CanvasRenderingContext2D,
     private mapSize: number,
     private currentPlayerId: string,
-    initialState: IGame
+    initialState: GameState
   ) {
     this.currentState = initialState;
     this.canvasResize();
   }
 
   private gameOver(): boolean {
-    const playersAlive: GameUser[] = [];
+    const playersAlive: Player[] = [];
 
-    this.currentState.users.forEach((player) => {
+    this.currentState.players.forEach((player) => {
       if (player.body.length > 0) {
         playersAlive.push(player);
       }
     });
 
     if (
-      (this.currentState.users.length > 1 && playersAlive.length < 2) ||
-      (this.currentState.users.length === 1 && playersAlive.length === 0)
+      (this.currentState.players.length > 1 && playersAlive.length < 2) ||
+      (this.currentState.players.length === 1 && playersAlive.length === 0)
     ) {
       return true;
     }
@@ -57,7 +57,7 @@ export class Game {
     return false;
   }
 
-  private someFruitWasCollected(previousState: IGame, newState: IGame) {
+  private someFruitWasCollected(previousState: GameState, newState: GameState) {
     for (let i = 0; i < previousState.fruits.length; i++) {
       const previousFruit = previousState.fruits[i];
 
@@ -79,7 +79,9 @@ export class Game {
     return false;
   }
 
-  drawGame(state: IGame) {
+  drawGame(state: GameState) {
+    (window as any).state = state;
+
     if (this.someFruitWasCollected(this.currentState, state)) {
       pickFruitSong.play();
     }
@@ -103,7 +105,7 @@ export class Game {
     const usersHeadPath = new Path2D();
     let activeHeadPath: Path2D;
 
-    const activePlayer = this.currentState.users.find(
+    const activePlayer = this.currentState.players.find(
       (user) => user.id === this.currentPlayerId
     );
 
@@ -114,7 +116,7 @@ export class Game {
       );
     }
 
-    this.currentState.users.forEach((user) => {
+    this.currentState.players.forEach((user) => {
       if (this.dead(user)) return;
       user.body.forEach(({ x, y }) => {
         usersBodyPath.addPath(this.createFillPath(x, y));
@@ -160,7 +162,7 @@ export class Game {
     this.ctx.restore();
   }
 
-  private dead(player: GameUser) {
+  private dead(player: Player) {
     return player.body.length === 0;
   }
 

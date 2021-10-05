@@ -1,22 +1,16 @@
+import { RoomAvailable } from 'colyseus.js';
 import { createContext } from 'react';
-import {
-  Game,
-  HomeRoom,
-  LobbyRoom,
-  MessageListener,
-  Ranking,
-  User,
-} from './types';
+import { GameState } from './schema';
+import { MessageListener, Ranking, User } from './types';
 
 export type GAME_ROUTES = 'lobby' | 'home' | 'game';
 
 interface GameContextProps {
   user: User;
   ping: number;
-  currentRoom?: LobbyRoom;
   ranking: Ranking[];
-  currentGame?: Game;
-  rooms: HomeRoom[];
+  gameState?: GameState;
+  rooms: RoomAvailable[];
   playersOnline: number;
   currentRoute: GAME_ROUTES;
   rankingPosition?: number;

@@ -15,6 +15,7 @@
     "@unform/core": "^2.1.6",
     "@unform/web": "^2.1.6",
     "axios": "^0.21.1",
+    "colyseus.js": "^0.14.13",
     "cookies": "^0.8.0",
     "jwt-decode": "^3.1.2",
     "next": "10.0.7",

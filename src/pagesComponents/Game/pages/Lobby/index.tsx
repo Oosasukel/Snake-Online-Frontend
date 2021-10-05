@@ -4,7 +4,7 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Chat, { ChatMessage } from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { RoomUser } from 'pagesComponents/Game/context/types';
+import { Player } from 'pagesComponents/Game/context/schema';
 import {
   createRef,
   useCallback,
@@ -26,7 +26,6 @@ interface ConfigFormData {
 
 const Lobby = () => {
   const {
-    currentRoom,
     user,
     leaveRoom,
     closeSlot,
@@ -35,31 +34,35 @@ const Lobby = () => {
     updateReady,
     kickPlayer,
     updateRoomConfig,
+    gameState,
   } = useContext(GameContext);
+
   const imReady = useMemo(() => {
     const me =
-      currentRoom.users.find((item) => item.id === user.id) || ({} as RoomUser);
+      gameState.players.find((item) => item.id === user.id) || ({} as Player);
     return me.ready;
-  }, [currentRoom, user]);
-  const iAmOwner = useMemo(() => currentRoom.owner === user.id, [
-    currentRoom,
-    user,
-  ]);
+  }, [gameState.players, user.id]);
+
+  const iAmOwner = useMemo(() => {
+    const ownerPlayer = gameState.players.find((item) => item.owner);
+    return ownerPlayer?.id === user.id;
+  }, [gameState.players, user.id]);
+
   const allPlayersAccepted = useMemo(
     () =>
-      currentRoom.users.filter(
-        (item) => item.id !== currentRoom.owner && !item.ready
-      ).length === 0,
-    [currentRoom]
+      gameState.players.filter((player) => !player.ready && !player.owner)
+        .length === 0,
+    [gameState.players]
   );
+
   const configFormRef = useRef<FormHandles>();
   const [mapConfig, setMapConfig] = useState<ConfigFormData>({
-    size: currentRoom.mapSize,
+    size: gameState.mapSize,
   });
 
   useEffect(() => {
-    setMapConfig((previous) => ({ ...previous, size: currentRoom.mapSize }));
-  }, [currentRoom.mapSize]);
+    setMapConfig((previous) => ({ ...previous, size: gameState.mapSize }));
+  }, [gameState.mapSize]);
 
   const playersSlotsRefs = useMemo(
     () => Array.from(Array(12).keys()).map(() => createRef<PlayerSlotRef>()),
@@ -68,21 +71,21 @@ const Lobby = () => {
 
   const showBalloonMessage = useCallback(
     (message: ChatMessage) => {
-      const userSender = currentRoom.users.find(
-        (item) => item.nickname === message.sender
+      const userSender = gameState.players.find(
+        (item) => item.name === message.sender
       );
 
       if (!userSender) return;
 
-      const slotIndex = currentRoom.slots.findIndex(
-        (slot) => slot === userSender.id
+      const slotIndex = gameState.slots.findIndex(
+        (slot) => slot.player?.id === userSender.id
       );
 
       if (slotIndex === -1) return;
 
       playersSlotsRefs[slotIndex].current?.message(message.text);
     },
-    [currentRoom, playersSlotsRefs]
+    [gameState.players, gameState.slots, playersSlotsRefs]
   );
 
   return (
@@ -93,7 +96,7 @@ const Lobby = () => {
       <S.SectionChat>
         <S.TitleContainer>
           <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
-          <h1>{currentRoom.name}</h1>
+          <h1>{gameState.roomName}</h1>
         </S.TitleContainer>
 
         <Chat onMessage={showBalloonMessage} />
@@ -101,25 +104,20 @@ const Lobby = () => {
 
       <S.SectionRoom>
         <S.PlayersContainer>
-          {currentRoom.slots.map((slot, index) => {
-            const hasUser = !['closed', 'open'].includes(slot);
-            const currentUser = hasUser
-              ? currentRoom.users.find((item) => item.id === slot)
-              : null;
-            const currentUserIsOwner = currentRoom.owner === currentUser?.id;
-            const closed = slot === 'closed';
+          {gameState.slots.map((slot, index) => {
+            const currentUser = slot.player;
 
             return (
               <PlayerSlot
                 ref={playersSlotsRefs[index]}
                 key={index}
-                empty={!closed && !currentUser}
-                name={currentUser?.nickname}
-                owner={currentUserIsOwner}
+                empty={!currentUser}
+                name={currentUser?.name}
+                owner={currentUser?.owner}
                 canKick={iAmOwner && currentUser?.id !== user.id}
-                canClose={iAmOwner && !closed}
-                canOpen={iAmOwner && closed}
-                closed={closed}
+                canClose={iAmOwner && slot.open}
+                canOpen={iAmOwner && !slot.open}
+                closed={!slot.open}
                 ready={currentUser?.ready}
                 itIsMe={currentUser?.id === user.id}
                 onClose={() => closeSlot(index)}
@@ -139,7 +137,7 @@ const Lobby = () => {
               if (!iAmOwner)
                 return setMapConfig((previous) => ({
                   ...previous,
-                  size: currentRoom.mapSize,
+                  size: gameState.mapSize,
                 }));
 
               let size = Number(data.size);
@@ -152,7 +150,7 @@ const Lobby = () => {
                 setMapConfig((previous) => ({ ...previous, size }));
               }
 
-              if (size !== currentRoom.mapSize) {
+              if (size !== gameState.mapSize) {
                 updateRoomConfig({ size });
               }
             }}

@@ -86,18 +86,17 @@ const Home = () => {
           </S.RoomsHeader>
           <S.RoomsList>
             {rooms.map((room) => {
-              const enabled =
-                !room.playing && room.maxUsers > room.currentUsers;
+              const enabled = room.metadata.maxClients > room.clients;
 
               return (
                 <S.ListItem
                   disabled={!enabled}
-                  key={room.id}
-                  onClick={enabled ? () => joinRoom(room.id) : undefined}
+                  key={room.roomId}
+                  onClick={enabled ? () => joinRoom(room.roomId) : undefined}
                 >
-                  <span>{room.name}</span>
+                  <span>{room.metadata.name}</span>
                   <span>
-                    {room.currentUsers}/{room.maxUsers}
+                    {room.clients}/{room.metadata.maxClients}
                   </span>
                 </S.ListItem>
               );

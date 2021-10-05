@@ -105,16 +105,11 @@ const Chat = ({ onMessage }: ChatProps) => {
     ({ message }, { reset }) => {
       if (!message) return;
 
-      addMessage({
-        sender: user.nickname,
-        text: message,
-      });
-
       messageEmit(message);
 
       reset();
     },
-    [addMessage, messageEmit, user]
+    [messageEmit]
   );
 
   useEffect(() => {

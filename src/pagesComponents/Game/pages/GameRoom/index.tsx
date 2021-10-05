@@ -3,7 +3,8 @@ import Button from 'components/Button';
 import Ranking from 'components/Ranking';
 import Chat from 'pagesComponents/Game/components/Chat';
 import { GameContext } from 'pagesComponents/Game/context/GameContext';
-import { directions, GameUser } from 'pagesComponents/Game/context/types';
+import { Player } from 'pagesComponents/Game/context/schema';
+import { directions } from 'pagesComponents/Game/context/types';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Game } from './classes/Game';
 import ModalGameOver from './components/ModalGameOver';
@@ -11,10 +12,9 @@ import * as S from './styles';
 
 const GameRoom = () => {
   const {
-    currentGame,
+    gameState,
     ping,
     incrementUserPoints,
-    currentRoom,
     leaveRoom,
     returnToLobby,
     user,
@@ -23,28 +23,30 @@ const GameRoom = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [game, setGame] = useState<Game>();
   const currentUsers = useMemo(() => {
-    return currentRoom.users;
+    return gameState.players;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const iAmAliveRef = useRef(true);
+
   const iAmAlive = useMemo(() => {
     if (!iAmAliveRef.current) return false;
 
-    const me = currentGame.users.find((player) => player.id === user.id);
+    const me = gameState.players.find((player) => player.id === user.id);
+
     if (!me || me.body.length === 0) return false;
 
     return true;
-  }, [currentGame.users, user.id]);
+  }, [gameState.players, user.id]);
   const gameOver = useMemo(() => {
-    const playersAlive: GameUser[] = [];
+    const playersAlive: Player[] = [];
 
-    currentGame.users.forEach((player) => {
+    gameState.players.forEach((player) => {
       if (player.body.length > 0) {
         playersAlive.push(player);
       }
     });
 
-    if (currentGame.users.length > 1 && playersAlive.length < 2) {
+    if (gameState.players.length > 1 && playersAlive.length < 2) {
       if (playersAlive.length === 1) {
         const playerAlive = playersAlive[0];
         const winner = currentUsers.find(
@@ -55,8 +57,8 @@ const GameRoom = () => {
           winner: winner
             ? {
                 id: winner.id,
-                nickname: winner.nickname,
-                gamePoints: playerAlive.gamePoints + currentGame.fruits.length,
+                nickname: winner.name,
+                gamePoints: playerAlive.gamePoints,
               }
             : null,
         };
@@ -65,30 +67,23 @@ const GameRoom = () => {
           winner: null,
         };
       }
-    } else if (currentGame.users.length === 1 && playersAlive.length === 0) {
+    } else if (gameState.players.length === 1 && playersAlive.length === 0) {
       return {
         winner: null,
       };
     }
 
     return null;
-  }, [currentGame.fruits.length, currentGame.users, currentUsers]);
+  }, [currentUsers, gameState.players]);
+
   const ranking = useMemo(() => {
-    return currentGame.users
+    return gameState.players
       .map((item) => {
         const currentUserNickname = currentUsers.find(
           (userItem) => userItem.id === item.id
-        )?.nickname;
+        )?.name;
 
-        let points = item.gamePoints;
-
-        if (gameOver && gameOver.winner) {
-          const { winner } = gameOver;
-
-          if (winner.id === item.id) {
-            points += currentGame.fruits.length;
-          }
-        }
+        const points = item.gamePoints;
 
         return {
           id: item.id,
@@ -101,7 +96,7 @@ const GameRoom = () => {
         else if (a.points === b.points) return 0;
         else return -1;
       });
-  }, [currentGame.fruits.length, currentGame.users, currentUsers, gameOver]);
+  }, [currentUsers, gameState.players]);
 
   useEffect(() => {
     let lastDirection: 'left' | 'right' | 'bottom' | 'top';
@@ -125,15 +120,10 @@ const GameRoom = () => {
       lastTouch.x = currentTouch.screenX;
       lastTouch.y = currentTouch.screenY;
 
-      console.log(offset);
-
       const angle = Math.atan2(offset.y, offset.x);
       const degrees = (180 * angle) / Math.PI;
       const roundedDegrees = (360 + Math.round(degrees)) % 360;
       const angleDirection = Math.round(roundedDegrees / 90);
-
-      console.log('angleDirection', angleDirection);
-      console.log('lastDirection', lastDirection);
 
       let currentDirection = lastDirection;
       switch (angleDirection) {
@@ -195,6 +185,7 @@ const GameRoom = () => {
   useEffect(() => {
     if (!iAmAlive && iAmAliveRef.current) {
       const me = ranking.find((r) => r.id === user.id);
+
       if (me) {
         incrementUserPoints(me.points);
       }
@@ -214,8 +205,8 @@ const GameRoom = () => {
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
-    const game = new Game(ctx, currentGame.mapSize, user.id, currentGame);
-    game.drawGame(currentGame);
+    const game = new Game(ctx, gameState.mapSize, user.id, gameState);
+    game.drawGame(gameState);
     setGame(game);
 
     const resizeGame = () => {
@@ -252,9 +243,9 @@ const GameRoom = () => {
 
   useEffect(() => {
     if (game) {
-      game.drawGame(currentGame);
+      game.drawGame(gameState);
     }
-  }, [currentGame, game]);
+  }, [game, gameState]);
 
   return (
     <S.Container>
@@ -277,7 +268,7 @@ const GameRoom = () => {
       </ModalGameOver>
 
       <S.ReturnIcon onClick={leaveRoom} src="/icons/return.svg" />
-      <S.Title>{currentRoom.name}</S.Title>
+      <S.Title>{gameState.roomName}</S.Title>
 
       <Chat />
 

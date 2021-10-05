@@ -2,7 +2,8 @@ import { FormHandles } from '@unform/core';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Modal from 'components/Modal';
-import { useCallback, useRef } from 'react';
+import { GameContext } from 'pagesComponents/Game/context/GameContext';
+import { useCallback, useContext, useRef } from 'react';
 import * as S from './styles';
 
 interface Data {
@@ -17,17 +18,25 @@ interface ModalNewRoomProps {
 
 const ModalNewRoom = ({ open, onClose, onCreate }: ModalNewRoomProps) => {
   const formRef = useRef<FormHandles>(null);
+  const { rooms } = useContext(GameContext);
 
   const submitNewRoom = useCallback(
     ({ name }: Data) => {
       formRef.current.setFieldError('name', '');
-      if (!name) {
+      if (!name)
         return formRef.current.setFieldError('name', 'Room name is required.');
-      }
+
+      const alreadyExists = !!rooms.find((room) => room.metadata.name === name);
+
+      if (alreadyExists)
+        return formRef.current.setFieldError(
+          'name',
+          'Room name already exits.'
+        );
 
       onCreate(name);
     },
-    [onCreate]
+    [onCreate, rooms]
   );
 
   const handleCancel = useCallback(() => {
