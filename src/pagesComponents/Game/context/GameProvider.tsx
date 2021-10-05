@@ -26,7 +26,7 @@ export const GameProvider = ({
   user: userProp,
 }: GameProviderProps) => {
   const client = useMemo(() => {
-    return new ColyseusClient('ws://localhost:3333');
+    return new ColyseusClient(process.env.NEXT_PUBLIC_COLYSEUS_ENDPOINT);
   }, []);
   const [user, setUser] = useState<User>(userProp);
   const [gameState, setGameState] = useState<GameState>();
