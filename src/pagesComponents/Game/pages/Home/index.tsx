@@ -26,9 +26,11 @@ const Home = () => {
   const [rankingOpen, setRankingOpen] = useState(false);
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
 
-  /** @TODO inplementar busca */
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const searchRoom = useCallback(() => {}, []);
+  const searchRoom = useCallback(() => {
+    /** @TODO inplementar busca */
+    alert('Not implemented yet. Search with F3');
+  }, []);
 
   const handleRequestRanking = useCallback(() => {
     requestRanking();
