@@ -106,7 +106,7 @@ const Home = () => {
           </S.RoomsList>
         </S.RoomsContainer>
         <S.RoomsOptions>
-          <Form onClick={searchRoom} onSubmit={searchRoom}>
+          <Form onSubmit={searchRoom}>
             <Input name="hello" placeholder="Type to search rooms..." />
             <button type="submit">
               <S.SearchIcon src="/icons/search.svg" />
